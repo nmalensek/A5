@@ -39,25 +39,17 @@ public class GarageGateImplementation
     public boolean checkTicket(TransactionLogInterface transl, int customerTicket) throws RemoteException {
         if (transl.isValidTicket(customerTicket)) {
             transl.modifyTicket(customerTicket, getTime(), TicketStatus.PAID, false);
-            System.out.println("Ticket accepted!");
             return true;
         }
         return false;
     }
 
-    public void createAndUpdateLostTicket(TransactionLogInterface log,
-                                          PaymentHandler handler, OccupancySign sign) throws RemoteException {
+    public int createAndUpdateLostTicket(TransactionLogInterface log) throws RemoteException {
         int lostTicketID = createTicket(log, lostTicketPrice);
         log.modifyTicket(lostTicketID, getTime(), TicketStatus.PAID, true);
-        handler.promptForTotal(log, lostTicketID);
+        return lostTicketID;
     }
-//
-//    public void closeGate() { pGate.closeGate(); }
-//
-//    public void printTicket(Ticket currentTicket) { pGate.printTicket(currentTicket); }
-//
-//    public void printFullMessage() { pGate.fullMessage(); }
-//
+
     public LocalDateTime getTime() {
         LocalDateTime timestamp = LocalDateTime.now();
         return timestamp.truncatedTo(MINUTES);

@@ -1,13 +1,13 @@
 package cs414.a5.nmalensk.server;
 
-import cs414.a5.nmalensk.common.GarageGateInterface;
-import cs414.a5.nmalensk.common.OccupancySignInterface;
-import cs414.a5.nmalensk.common.ParkingGarageInterface;
-import cs414.a5.nmalensk.common.TransactionLogInterface;
+import cs414.a5.nmalensk.common.*;
 
+import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class ParkingGarageImplementation extends UnicastRemoteObject implements ParkingGarageInterface{
+public class ParkingGarageImplementation
+        extends UnicastRemoteObject
+        implements ParkingGarageInterface{
 
     private static OccupancySignInterface sign;
     private GarageGateInterface gate;
@@ -17,6 +17,7 @@ public class ParkingGarageImplementation extends UnicastRemoteObject implements 
         sign = new OccupancySignImplementation(spaces);
         gate = new GarageGateImplementation();
         log = new TransactionLogImplementation();
+        FakeTicketGeneration fakeTickets = new FakeTicketGeneration(log);
     }
 
     public OccupancySignInterface getSign() throws java.rmi.RemoteException {

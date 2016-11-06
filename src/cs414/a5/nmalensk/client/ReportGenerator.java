@@ -1,5 +1,9 @@
-package cs414.a5.nmalensk.domain_logic;
+package cs414.a5.nmalensk.client;
 
+import cs414.a5.nmalensk.common.TransactionLogInterface;
+import cs414.a5.nmalensk.domain_logic.TransactionLog;
+
+import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import static cs414.a5.nmalensk.client.TextInput.userInput;
@@ -7,14 +11,19 @@ import static cs414.a5.nmalensk.client.TextInput.userInput;
 public class ReportGenerator {
     private LocalDateTime start;
     private LocalDateTime end;
+    private TransactionLogInterface tLI;
 
-    public void generateCustomReport(TransactionLog log, String reportType) {
+    public ReportGenerator(TransactionLogInterface log) {
+        tLI = log;
+    }
+
+    public void generateCustomReport(String reportType) throws RemoteException {
         generateStartDate();
         generateEndDate();
         if (reportType.equals("occupancy")) {
-            log.printHourlyOccupancyData(start, end);
+            System.out.println(tLI.printHourlyOccupancyData(start, end));
         } else if (reportType.equals("sales")) {
-            log.printDailySalesReport(log.collectDaysWithSales(start, end));
+            System.out.println(tLI.printDailySalesReport(tLI.collectDaysWithSales(start, end)));
         }
     }
 
@@ -55,6 +64,9 @@ public class ReportGenerator {
             System.out.println("Invalid input!");
             generateEndDate();
         }
+    }
+
+    public void occupancyReportHeader() {
     }
 
 }

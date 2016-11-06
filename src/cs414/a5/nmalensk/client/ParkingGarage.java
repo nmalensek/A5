@@ -32,8 +32,6 @@ public class ParkingGarage {
 
     PhysicalGarageGate physicalGate = new PhysicalGarageGate();
     PaymentHandler handler = new PaymentHandler();
-//    FakeTicketGeneration fakeTickets = new FakeTicketGeneration(log);
-//    ReportGenerator reportGenerator = new ReportGenerator();
 
     public void initialMessage() throws RemoteException {
         System.out.println(oSI.welcomeMessage());
@@ -56,20 +54,19 @@ public class ParkingGarage {
     }
 
     private boolean optionsCheck(String choice) throws RemoteException {
-        if (choice.equals("1")) {
+        if (choice.equals("1") && thereAreStillOpenSpaces()) {
             enterGarage();
         } else if (choice.equals("2")) {
             exitGarage();
         } else if (choice.equals("q")) {
             return false;
         } else {
-            System.out.println("Invalid input!");
-            vacantOptions();
+            System.out.println("Invalid input or no more spaces available!\n");
         }
         return true;
     }
 
-    private void fullOptions() {
+    private void fullOptions() throws RemoteException {
         physicalGate.fullMessage();
         String choice = userInput();
         if (!choice.equals("2")) {
@@ -80,7 +77,8 @@ public class ParkingGarage {
     }
 
     public void enterGarage() throws RemoteException {
-        physicalGate.printTicket(gGI.createTicket(tLI, ticketPrice));
+        int newTicket = gGI.createTicket(tLI, ticketPrice);
+        physicalGate.printTicket(newTicket, tLI.retrieveEntryTime(newTicket));
         pressEnter();
         physicalGate.openGate("enter");
         gGI.admitCustomer(oSI);
@@ -88,9 +86,10 @@ public class ParkingGarage {
         physicalGate.closeGate();
     }
 
-    private void exitGarage() {
+    private void exitGarage() throws RemoteException {
         System.out.println("Please enter your ticket ID or 1 for a lost/unavailable ticket:");
         checkTicketValidity();
+        physicalGate.openGate("exit");
         pressEnter();
         physicalGate.closeGate();
     }
@@ -100,10 +99,12 @@ public class ParkingGarage {
             try {
                 int exitTicket = Integer.parseInt(userInput());
                 if (exitTicket == 1) {
-                    gGI.createAndUpdateLostTicket(tLI, handler, oSI);
+                    int lostTicket = gGI.createAndUpdateLostTicket(tLI);
+                    handler.promptForTotal(tLI, lostTicket);
                     gGI.expelCustomer(oSI);
                     break;
                 } else if(gGI.checkTicket(tLI, exitTicket)) {
+                    System.out.println("Ticket accepted!");
                     handler.promptForTotal(tLI, exitTicket);
                     gGI.expelCustomer(oSI);
                     break;
@@ -115,6 +116,11 @@ public class ParkingGarage {
                 System.out.println("Please enter a valid ticket ID format (numbers only):");
             }
         }
+    }
+
+    private boolean thereAreStillOpenSpaces() throws RemoteException {
+        if (oSI.getOpenSpaces() > 0) return true;
+        return false;
     }
 
 //    public void generateCustomReport(String reportType) {

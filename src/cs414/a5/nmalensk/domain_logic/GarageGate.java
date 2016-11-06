@@ -42,7 +42,7 @@ public class GarageGate {
     public void createAndUpdateLostTicket(TransactionLog log, PaymentHandler handler, OccupancySign sign) {
         Ticket lostTicket = createTicket(log, lostTicketPrice);
         log.modifyTicket(lostTicket.getTicketID(), getTime(), TicketStatus.PAID, true);
-        handler.promptForTotal(log, lostTicket.getTicketID());
+//        handler.promptForTotal(log, lostTicket.getTicketID());
         expelCustomer(sign);
     }
 

@@ -1,5 +1,6 @@
 package cs414.a5.nmalensk.domain_logic;
 
+import java.time.LocalDateTime;
 
 public class PhysicalGarageGate {
 
@@ -24,9 +25,10 @@ public class PhysicalGarageGate {
         System.out.println("******** Gate is closed ********\n");
     }
 
-    public void printTicket(int currentTicketID) {
+    public void printTicket(int currentTicketID, LocalDateTime entryTime) {
+        System.out.println("Printing ticket:\n");
         System.out.println("-------------------------");
-        System.out.println("  " + "entryTime");
+        System.out.println("  " + entryTime);
         System.out.println("  TicketID:  " + currentTicketID);
         System.out.println("-------------------------");
         System.out.println();

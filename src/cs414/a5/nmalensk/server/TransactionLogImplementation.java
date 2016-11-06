@@ -23,6 +23,11 @@ public class TransactionLogImplementation
 
     private Map<Integer, TicketInterface> assignedTickets = new HashMap<>();
 
+    public LocalDateTime retrieveEntryTime(int ticketID) throws RemoteException {
+        TicketInterface ticketToGet = assignedTickets.get(ticketID);
+        return ticketToGet.getEntryTime();
+    }
+
     public void addTicket(TicketInterface newTicket) {
         try {
             assignedTickets.put(newTicket.getTicketID(), newTicket);
@@ -80,22 +85,24 @@ public class TransactionLogImplementation
         return salesMap;
     }
 
-    public void printDailySalesReport(Map<LocalDateTime, BigDecimal> map) {
+    public String printDailySalesReport(Map<LocalDateTime, BigDecimal> map) {
         BigDecimal totalForDay = new BigDecimal("0.00").setScale(2, RoundingMode.HALF_UP);
         BigDecimal totalForRange = new BigDecimal("0.00").setScale(2, RoundingMode.HALF_UP);
+        String salesReport = "";
 
         for (LocalDateTime key : map.keySet()) {
             totalForDay = totalForDay.add(map.get(key));
             totalForRange = totalForRange.add(map.get(key));
-            System.out.println(key + ": $" + totalForDay);
+            salesReport += key + ": $" + totalForDay + "\n";
             totalForDay = BigDecimal.ZERO;
         }
-        System.out.println("Total sales in range: $" + totalForRange);
+        salesReport += "Total sales in range: $" + totalForRange;
+        return salesReport;
     }
 
-    public void printHourlyOccupancyData(LocalDateTime start, LocalDateTime finish) throws RemoteException {
-        System.out.printf("%-5s %5s %n", "Hour |", "# cars in garage");
-        System.out.println("------------------------");
+    public String printHourlyOccupancyData(LocalDateTime start, LocalDateTime finish) throws RemoteException {
+        String report = String.format("%-5s %5s %n", "Hour  |", "# cars in garage");
+        report += "------------------------\n";
         for (int hour = 0; hour < 24; ++hour) {
             int numCars = 0;
             for (Integer key : assignedTickets.keySet()) {
@@ -106,7 +113,8 @@ public class TransactionLogImplementation
                     }
                 }
             }
-            System.out.printf("%-5s %1s %5s %n", hour, "|", numCars);
+            report += String.format("%-5s %1s %5s %n", hour, "|", numCars);
         }
+        return report;
     }
 }

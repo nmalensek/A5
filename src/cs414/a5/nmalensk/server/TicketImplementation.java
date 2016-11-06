@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class TicketImplementation
 extends UnicastRemoteObject
 implements TicketInterface {
-
+//TODO record which gate the ticket came from (might be useful to track most-used side)
         private int ticketID;
         private LocalDateTime entryTime;
         private LocalDateTime exitTime;
@@ -28,7 +28,7 @@ implements TicketInterface {
             this.status = status;
         }
 
-        private int incrementTicketID() {
+        public int incrementTicketID() {
             currentTicketID += 1;
             return currentTicketID;
         }

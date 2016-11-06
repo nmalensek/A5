@@ -1,13 +1,15 @@
 package cs414.a5.nmalensk.client;
 
 
+import cs414.a5.nmalensk.common.TransactionLogInterface;
 import cs414.a5.nmalensk.domain_logic.TransactionLog;
 
 import java.math.BigDecimal;
+import java.rmi.RemoteException;
 
 public class PaymentHandler {
 
-    public void promptForTotal(TransactionLog log, int ticketID) {
+    public void promptForTotal(TransactionLogInterface log, int ticketID) throws RemoteException {
         BigDecimal total = log.getTicketPrice(ticketID);
         BigDecimal zero = new BigDecimal("0.00");
         while (total.compareTo(zero) > 0) {
