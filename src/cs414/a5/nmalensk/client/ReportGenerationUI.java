@@ -1,33 +1,39 @@
 package cs414.a5.nmalensk.client;
 
+import cs414.a5.nmalensk.common.ReportGeneratorInterface;
 import cs414.a5.nmalensk.common.TransactionLogInterface;
 import cs414.a5.nmalensk.domain_logic.TransactionLog;
+import cs414.a5.nmalensk.server.ReportGeneratorImplementation;
 
 import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.List;
+
 import static cs414.a5.nmalensk.client.TextInput.userInput;
 
 public class ReportGenerationUI {
     private LocalDateTime start;
     private LocalDateTime end;
     private TransactionLogInterface tLI;
+    private ReportGeneratorInterface rGI;
 
-    public ReportGenerationUI(TransactionLogInterface log) {
+    public ReportGenerationUI(TransactionLogInterface log, List gateList) throws RemoteException {
         tLI = log;
+        rGI = new ReportGeneratorImplementation(gateList);
     }
 
     public void generateCustomReport(String reportType) throws RemoteException {
         generateStartDate();
         generateEndDate();
         if (reportType.equals("occupancy")) {
-            System.out.println(tLI.printHourlyOccupancyData(start, end));
+            System.out.println(rGI.printHourlyOccupancyData(tLI, start, end));
         } else if (reportType.equals("sales")) {
-            System.out.println(tLI.printDailySalesReport(tLI.collectDaysWithSales(start, end)));
+            System.out.println(rGI.printDailySalesReport(rGI.collectDaysWithSales(tLI, start, end)));
         } else if (reportType.equals("gate")) {
-            System.out.println(tLI.printGateEntries(start, end));
+            System.out.println(rGI.printGateEntries(tLI, start, end));
             System.out.println();
-            System.out.println(tLI.printGateExits(start, end));
+            System.out.println(rGI.printGateExits(tLI, start, end));
         }
     }
 

@@ -11,7 +11,7 @@ import static cs414.a5.nmalensk.client.TextInput.userInput;
 
 public class AdministratorClient {
 
-    private static ReportGenerationUI reportGenerator;
+    private static ReportGenerationUI reportGeneratorUI;
 
     public static void main(String[] args) {
         ParkingGarageInterface pGI = null;
@@ -24,7 +24,7 @@ public class AdministratorClient {
         }
 
         try {
-            reportGenerator = new ReportGenerationUI(pGI.getTLog());
+            reportGeneratorUI = new ReportGenerationUI(pGI.getTLog(), pGI.getGateList());
             MainMenu();
         } catch (RemoteException re) {
             re.printStackTrace();
@@ -44,9 +44,9 @@ public class AdministratorClient {
     }
 
     private static void optionsCheck(String choice) throws RemoteException {
-        if (choice.equals("1")) { reportGenerator.generateCustomReport("occupancy"); }
-        else if (choice.equals("2")) { reportGenerator.generateCustomReport("sales"); }
-        else if (choice.equals("3")) { reportGenerator.generateCustomReport("gate"); }
+        if (choice.equals("1")) { reportGeneratorUI.generateCustomReport("occupancy"); }
+        else if (choice.equals("2")) { reportGeneratorUI.generateCustomReport("sales"); }
+        else if (choice.equals("3")) { reportGeneratorUI.generateCustomReport("gate"); }
         else {
             System.out.println("Please enter a valid option!");
         }
