@@ -24,18 +24,13 @@ public class TicketImplementation
                                 BigDecimal price,
                                 TicketStatus status,
                                 String entryGate, String exitGate) throws java.rmi.RemoteException {
-        this.ticketID = incrementTicketID();
+        this.ticketID = ++currentTicketID;
         this.entryTime = entryTime;
         this.exitTime = exitTime;
         this.price = price;
         this.status = status;
         this.entryGate = entryGate;
         this.exitGate = exitGate;
-    }
-
-    public int incrementTicketID() {
-        currentTicketID += 1;
-        return currentTicketID;
     }
 
     public LocalDateTime getEntryTime() {

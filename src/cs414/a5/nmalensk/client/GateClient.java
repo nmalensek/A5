@@ -25,10 +25,10 @@ public class GateClient {
         String gateName = args[2];
 
         try {
-            GarageGateInterface gGI = new GarageGateImplementation(gateName);
-            ParkingGarage park = new ParkingGarage(pGI, gGI);
+            GarageGateInterface gGI = pGI.initializeGarageGate(gateName);
+            CustomerUI cUI = new CustomerUI(pGI, gGI);
             pGI.gateInitialized(gGI);
-            park.initialMessage();
+            cUI.initialMessage();
         } catch (RemoteException re) {
             re.printStackTrace();
             System.exit(-1);

@@ -34,8 +34,10 @@ public class AdministratorClient {
 
     private static void MainMenu() throws RemoteException {
         while(true) {
+            System.out.println("Choose from the following:");
             System.out.println("Please enter 1 to make an occupancy report (cars in garage per hour)");
             System.out.println("or 2 to make a sales report (sales per day and total in specified range)");
+            System.out.println("3 - report on entries/exits by gate for range");
             String choice = userInput();
             optionsCheck(choice);
         }
@@ -44,6 +46,7 @@ public class AdministratorClient {
     private static void optionsCheck(String choice) throws RemoteException {
         if (choice.equals("1")) { reportGenerator.generateCustomReport("occupancy"); }
         else if (choice.equals("2")) { reportGenerator.generateCustomReport("sales"); }
+        else if (choice.equals("3")) { reportGenerator.generateCustomReport("gate"); }
         else {
             System.out.println("Please enter a valid option!");
         }

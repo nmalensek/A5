@@ -29,6 +29,11 @@ public class ParkingGarageImplementation
         return log;
     }
 
+    public GarageGateInterface initializeGarageGate(String gateName) throws RemoteException {
+        GarageGateInterface newGate = new GarageGateImplementation(gateName);
+        return newGate;
+    }
+
     public int getOpenSpaces() throws java.rmi.RemoteException {
         return sign.getOpenSpaces();
     }

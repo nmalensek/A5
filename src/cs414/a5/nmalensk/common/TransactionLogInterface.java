@@ -8,21 +8,36 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 public interface TransactionLogInterface extends java.rmi.Remote {
-    public LocalDateTime retrieveEntryTime(int ticketID) throws RemoteException;
-    public void addTicket(TicketInterface newTicket) throws RemoteException;
-    public boolean isValidTicket(int inputTicketID) throws RemoteException;
-    public void modifyTicket(int modTicket,
-                             LocalDateTime exitTime,
-                             TicketStatus newStatus,
-                             boolean isLost, String exitGate) throws RemoteException;
-    public BigDecimal getTicketPrice(int ticketID) throws RemoteException;
-    public BigDecimal calculateTicketPrice(TicketInterface ticket,
-                                           boolean isLost) throws RemoteException;
-    public Map<LocalDateTime, BigDecimal> collectDaysWithSales(LocalDateTime start,
-                                                               LocalDateTime finish)
-                                                                throws RemoteException;
-    public String printDailySalesReport(Map<LocalDateTime,
-                                        BigDecimal> map) throws RemoteException;
-    public String printHourlyOccupancyData(LocalDateTime start,
-                                         LocalDateTime finish) throws RemoteException;
+    LocalDateTime retrieveEntryTime(int ticketID) throws RemoteException;
+
+    void addTicket(TicketInterface newTicket) throws RemoteException;
+
+    boolean isValidTicket(int inputTicketID) throws RemoteException;
+
+    void modifyTicket(int modTicket,
+                      LocalDateTime exitTime,
+                      boolean isLost, String exitGate) throws RemoteException;
+
+    BigDecimal getTicketPrice(int ticketID) throws RemoteException;
+
+    BigDecimal calculateTicketPrice(TicketInterface ticket,
+                                    boolean isLost) throws RemoteException;
+
+    void markTicketPaid(int ticketID) throws RemoteException;
+
+    Map<LocalDateTime, BigDecimal> collectDaysWithSales(LocalDateTime start,
+                                                        LocalDateTime finish)
+            throws RemoteException;
+
+    String printDailySalesReport(Map<LocalDateTime,
+            BigDecimal> map) throws RemoteException;
+
+    String printHourlyOccupancyData(LocalDateTime start,
+                                    LocalDateTime finish) throws RemoteException;
+
+    String printGateEntries(LocalDateTime start,
+                            LocalDateTime finish) throws RemoteException;
+
+    String printGateExits(LocalDateTime start,
+                            LocalDateTime finish) throws RemoteException;
 }

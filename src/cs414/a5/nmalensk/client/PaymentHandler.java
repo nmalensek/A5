@@ -1,6 +1,7 @@
 package cs414.a5.nmalensk.client;
 
 
+import cs414.a5.nmalensk.common.TicketInterface;
 import cs414.a5.nmalensk.common.TransactionLogInterface;
 import cs414.a5.nmalensk.domain_logic.TransactionLog;
 
@@ -20,10 +21,11 @@ public class PaymentHandler {
         if (total.compareTo(zero) < 0) {
             giveChange(total.negate());
         }
+        log.markTicketPaid(ticketID);
         System.out.println("Payment accepted, have a nice day!");
     }
 
-    public BigDecimal verifyInput(BigDecimal amountDue, BigDecimal nothing) {
+    public BigDecimal verifyInput(BigDecimal amountDue, BigDecimal nothingDeducted) {
         String paymentType = TextInput.userInput();
         if (paymentType.equals("1")) {
             return handleCashPayment();
@@ -31,7 +33,7 @@ public class PaymentHandler {
             return handleCreditPayment(amountDue);
         } else {
             System.out.println("Not a valid payment option, please re-enter!");
-            return nothing;
+            return nothingDeducted;
         }
     }
 

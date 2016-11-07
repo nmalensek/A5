@@ -1,7 +1,7 @@
 //package cs414.a5.nmalensk.delete;
 //
 //import cs414.a5.nmalensk.client.AdministratorClient;
-//import cs414.a5.nmalensk.client.ParkingGarage;
+//import cs414.a5.nmalensk.client.CustomerUI;
 //
 //import java.rmi.RemoteException;
 //
@@ -12,7 +12,7 @@
 //    public static void main(String[] args) {
 //        System.out.println("Enter the garage capacity:");
 //        amount = setCapacity();
-////        ParkingGarage pg = new ParkingGarage(amount);
+////        CustomerUI pg = new CustomerUI(amount);
 //        while (true) {
 //            mainMenu();
 //            verifyInput(userInput(), pg);
@@ -33,7 +33,7 @@
 //        System.out.println("Enter 2 to access parking garage as a Garage Administrator");
 //    }
 //
-//    public static void verifyInput(String input, ParkingGarage park) {
+//    public static void verifyInput(String input, CustomerUI park) {
 //        if (input.equals("1")) {
 //            System.out.println("Entering as Customer");
 //            try {

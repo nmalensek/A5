@@ -32,14 +32,15 @@ public class GarageGateImplementation
 
     public int createTicket(TransactionLogInterface log, BigDecimal price) throws RemoteException {
         TicketInterface newTicket = new TicketImplementation(getTime(),
-                standardExitTime(), price, TicketStatus.UNPAID, gateName, null);
+                standardExitTime(), price, TicketStatus.UNPAID, gateName, "still in garage");
         log.addTicket(newTicket);
+        System.out.println("Ticket " + newTicket.getTicketID() + " successfully created!");
         return newTicket.getTicketID();
     }
 
     public boolean checkTicket(TransactionLogInterface transl, int customerTicket) throws RemoteException {
         if (transl.isValidTicket(customerTicket)) {
-            transl.modifyTicket(customerTicket, getTime(), TicketStatus.PAID, false, gateName);
+            transl.modifyTicket(customerTicket, getTime(), false, gateName);
             return true;
         }
         return false;
@@ -47,7 +48,7 @@ public class GarageGateImplementation
 
     public int createAndUpdateLostTicket(TransactionLogInterface log) throws RemoteException {
         int lostTicketID = createTicket(log, lostTicketPrice);
-        log.modifyTicket(lostTicketID, getTime(), TicketStatus.PAID, true, gateName);
+        log.modifyTicket(lostTicketID, getTime(), true, gateName);
         return lostTicketID;
     }
 

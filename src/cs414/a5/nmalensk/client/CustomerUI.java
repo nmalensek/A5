@@ -11,14 +11,14 @@ import java.rmi.RemoteException;
 import static cs414.a5.nmalensk.client.TextInput.pressEnter;
 import static cs414.a5.nmalensk.client.TextInput.userInput;
 
-public class ParkingGarage {
+public class CustomerUI {
     private ParkingGarageInterface pGI;
     private GarageGateInterface gGI;
     private OccupancySignInterface oSI;
     private TransactionLogInterface tLI;
     private BigDecimal ticketPrice = BigDecimal.ZERO;
 
-    public ParkingGarage(ParkingGarageInterface pGI, GarageGateInterface gGI) throws RemoteException {
+    public CustomerUI(ParkingGarageInterface pGI, GarageGateInterface gGI) throws RemoteException {
         this.pGI = pGI;
         this.gGI = gGI;
         getRemoteObjects();

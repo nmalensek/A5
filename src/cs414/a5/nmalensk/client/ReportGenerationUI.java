@@ -24,6 +24,10 @@ public class ReportGenerationUI {
             System.out.println(tLI.printHourlyOccupancyData(start, end));
         } else if (reportType.equals("sales")) {
             System.out.println(tLI.printDailySalesReport(tLI.collectDaysWithSales(start, end)));
+        } else if (reportType.equals("gate")) {
+            System.out.println(tLI.printGateEntries(start, end));
+            System.out.println();
+            System.out.println(tLI.printGateExits(start, end));
         }
     }
 

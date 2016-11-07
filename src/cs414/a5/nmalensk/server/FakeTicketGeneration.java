@@ -79,7 +79,8 @@ public class FakeTicketGeneration {
             for (int i = 0; i < ticketList.length; ++i){
                 tLog.modifyTicket(ticketList[i].getTicketID(),
                         ticketList[i].getEntryTime().plusHours(durationList[i]),
-                        TicketStatus.PAID, false, "testGate");
+                        false, "testGate");
+                tLog.markTicketPaid(ticketList[i].getTicketID());
         }
         } catch (RemoteException rE) {
             System.out.println("Unable to mark fake tickets as paid");

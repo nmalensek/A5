@@ -5,7 +5,6 @@ import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 
 public interface TicketInterface extends java.rmi.Remote {
-    public int incrementTicketID() throws RemoteException;
     public LocalDateTime getEntryTime() throws RemoteException;
     public LocalDateTime getExitTime() throws RemoteException;
     public void setExitTime(LocalDateTime exitTime) throws RemoteException;

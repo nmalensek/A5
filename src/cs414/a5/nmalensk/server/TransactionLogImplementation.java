@@ -1,5 +1,6 @@
 package cs414.a5.nmalensk.server;
 
+import cs414.a5.nmalensk.common.GarageGateInterface;
 import cs414.a5.nmalensk.common.TicketInterface;
 import cs414.a5.nmalensk.common.TicketStatus;
 import cs414.a5.nmalensk.common.TransactionLogInterface;
@@ -17,10 +18,11 @@ import java.util.TreeMap;
 
 public class TransactionLogImplementation
         extends UnicastRemoteObject
-        implements TransactionLogInterface{
+        implements TransactionLogInterface {
 
     private List gateList;
-//TODO split report methods into separate class, make getter for assignedTickets and use that to construct new class
+
+    //TODO split report methods into separate class, make getter for assignedTickets and use that to construct new class
     public TransactionLogImplementation(List gateList) throws java.rmi.RemoteException {
         this.gateList = gateList;
     }
@@ -49,11 +51,9 @@ public class TransactionLogImplementation
 
     public void modifyTicket(int modTicket,
                              LocalDateTime exitTime,
-                             TicketStatus newStatus,
                              boolean isLost, String exitGate) throws RemoteException {
         TicketInterface ticket = assignedTickets.get(modTicket);
         ticket.setExitTime(exitTime);
-        ticket.setStatus(newStatus);
         ticket.setPrice(calculateTicketPrice(ticket, isLost));
         ticket.setExitGate(exitGate);
     }
@@ -64,12 +64,20 @@ public class TransactionLogImplementation
     }
 
     public BigDecimal calculateTicketPrice(TicketInterface ticket, boolean isLost) throws RemoteException {
-        if (isLost) { return ticket.getPrice(); }
+        if (isLost) {
+            return ticket.getPrice();
+        }
         BigDecimal hours =
                 new BigDecimal(ticket.getEntryTime().until(ticket.getExitTime(), ChronoUnit.HOURS));
         BigDecimal ratePerHour = new BigDecimal("1.00").setScale(2, RoundingMode.HALF_UP);
 
         return ratePerHour.multiply(hours).add(BigDecimal.ONE);
+    }
+
+    public void markTicketPaid(int ticketID) throws RemoteException {
+        TicketInterface ticket = assignedTickets.get(ticketID);
+        ticket.setStatus(TicketStatus.PAID);
+        System.out.println("Ticket " + ticketID + " successfully exited");
     }
 
     public Map<LocalDateTime, BigDecimal> collectDaysWithSales(LocalDateTime start,
@@ -106,8 +114,8 @@ public class TransactionLogImplementation
     }
 
     public String printHourlyOccupancyData(LocalDateTime start, LocalDateTime finish) throws RemoteException {
-        String report = String.format("%-5s %5s %n", "Hour  |", "# cars in garage");
-        report += "------------------------\n";
+        String occReport = String.format("%-5s %5s %n", "Hour  |", "# cars in garage");
+        occReport += "------------------------\n";
         for (int hour = 0; hour < 24; ++hour) {
             int numCars = 0;
             for (Integer key : assignedTickets.keySet()) {
@@ -118,8 +126,42 @@ public class TransactionLogImplementation
                     }
                 }
             }
-            report += String.format("%-5s %1s %5s %n", hour, "|", numCars);
+            occReport += String.format("%-5s %1s %5s %n", hour, "|", numCars);
         }
-        return report;
+        return occReport;
+    }
+
+    public String printGateEntries(LocalDateTime start, LocalDateTime finish) throws RemoteException {
+        String gateReport = String.format("%-5s %5s %n", "Gate  |", "# cars entered");
+        gateReport += "------------------------\n";
+        for (int listPosition = 0; listPosition < gateList.size(); ++listPosition) {
+            int numEntries = 0;
+            GarageGateInterface gGI = (GarageGateInterface) gateList.get(listPosition);
+            for (Integer key : assignedTickets.keySet()) {
+                TicketInterface ticket = assignedTickets.get(key);
+                if (gGI.getName().equals(ticket.getEntryGate())) {
+                    numEntries++;
+                }
+            }
+            gateReport += String.format("%-5s %1s %5s %n", gGI.getName(), "|", numEntries);
+        }
+        return gateReport;
+    }
+
+    public String printGateExits(LocalDateTime start, LocalDateTime finish) throws RemoteException {
+        String gateReport = String.format("%-5s %5s %n", "Gate  |", "# cars exited");
+        gateReport += "------------------------\n";
+        for (int listPosition = 0; listPosition < gateList.size(); ++listPosition) {
+            int numEntries = 0;
+            GarageGateInterface gGI = (GarageGateInterface) gateList.get(listPosition);
+            for (Integer key : assignedTickets.keySet()) {
+                TicketInterface ticket = assignedTickets.get(key);
+                if (gGI.getName().equals(ticket.getExitGate())) {
+                    numEntries++;
+                }
+            }
+            gateReport += String.format("%-5s %1s %5s %n", gGI.getName(), "|", numEntries);
+        }
+        return gateReport;
     }
 }
