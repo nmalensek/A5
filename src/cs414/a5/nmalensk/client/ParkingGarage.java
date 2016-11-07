@@ -4,7 +4,6 @@ import cs414.a5.nmalensk.common.GarageGateInterface;
 import cs414.a5.nmalensk.common.OccupancySignInterface;
 import cs414.a5.nmalensk.common.ParkingGarageInterface;
 import cs414.a5.nmalensk.common.TransactionLogInterface;
-import cs414.a5.nmalensk.domain_logic.*;
 
 import java.math.BigDecimal;
 import java.rmi.RemoteException;
@@ -19,14 +18,14 @@ public class ParkingGarage {
     private TransactionLogInterface tLI;
     private BigDecimal ticketPrice = BigDecimal.ZERO;
 
-    public ParkingGarage(ParkingGarageInterface pGI) throws RemoteException {
+    public ParkingGarage(ParkingGarageInterface pGI, GarageGateInterface gGI) throws RemoteException {
         this.pGI = pGI;
+        this.gGI = gGI;
         getRemoteObjects();
     }
 
     public void getRemoteObjects() throws RemoteException {
         oSI = pGI.getSign();
-        gGI = pGI.getGate();
         tLI = pGI.getTLog();
     }
 
@@ -123,7 +122,4 @@ public class ParkingGarage {
         return false;
     }
 
-//    public void generateCustomReport(String reportType) {
-//        reportGenerator.generateCustomReport(log, reportType);
-//    }
 }

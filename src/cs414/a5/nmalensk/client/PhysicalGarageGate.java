@@ -1,4 +1,4 @@
-package cs414.a5.nmalensk.domain_logic;
+package cs414.a5.nmalensk.client;
 
 import java.time.LocalDateTime;
 

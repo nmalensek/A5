@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import static cs414.a5.nmalensk.client.TextInput.userInput;
 
-public class ReportGenerator {
+public class ReportGenerationUI {
     private LocalDateTime start;
     private LocalDateTime end;
     private TransactionLogInterface tLI;
 
-    public ReportGenerator(TransactionLogInterface log) {
+    public ReportGenerationUI(TransactionLogInterface log) {
         tLI = log;
     }
 
@@ -65,8 +65,4 @@ public class ReportGenerator {
             generateEndDate();
         }
     }
-
-    public void occupancyReportHeader() {
-    }
-
 }

@@ -14,7 +14,7 @@ public interface TransactionLogInterface extends java.rmi.Remote {
     public void modifyTicket(int modTicket,
                              LocalDateTime exitTime,
                              TicketStatus newStatus,
-                             boolean isLost) throws RemoteException;
+                             boolean isLost, String exitGate) throws RemoteException;
     public BigDecimal getTicketPrice(int ticketID) throws RemoteException;
     public BigDecimal calculateTicketPrice(TicketInterface ticket,
                                            boolean isLost) throws RemoteException;

@@ -4,28 +4,25 @@ import cs414.a5.nmalensk.common.*;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ParkingGarageImplementation
         extends UnicastRemoteObject
         implements ParkingGarageInterface{
 
     private static OccupancySignInterface sign;
-    private GarageGateInterface gate;
     private TransactionLogInterface log;
+    private List<GarageGateInterface> gateList = new ArrayList();
 
     public ParkingGarageImplementation(int spaces) throws java.rmi.RemoteException {
         sign = new OccupancySignImplementation(spaces);
-        gate = new GarageGateImplementation();
-        log = new TransactionLogImplementation();
+        log = new TransactionLogImplementation(getGateList());
         FakeTicketGeneration fakeTickets = new FakeTicketGeneration(log);
     }
 
     public OccupancySignInterface getSign() throws java.rmi.RemoteException {
         return sign;
-    }
-
-    public GarageGateInterface getGate() throws java.rmi.RemoteException {
-        return gate;
     }
 
     public TransactionLogInterface getTLog() throws java.rmi.RemoteException {
@@ -34,6 +31,15 @@ public class ParkingGarageImplementation
 
     public int getOpenSpaces() throws java.rmi.RemoteException {
         return sign.getOpenSpaces();
+    }
+
+    public List getGateList() throws RemoteException {
+        return gateList;
+    }
+
+    public void gateInitialized(GarageGateInterface gate) throws RemoteException {
+        System.out.println("Gate " + gate.getName()  + " online");
+        gateList.add(gate);
     }
 
 }

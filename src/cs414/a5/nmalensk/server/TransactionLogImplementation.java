@@ -11,6 +11,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -18,7 +19,10 @@ public class TransactionLogImplementation
         extends UnicastRemoteObject
         implements TransactionLogInterface{
 
-    public TransactionLogImplementation() throws java.rmi.RemoteException {
+    private List gateList;
+//TODO split report methods into separate class, make getter for assignedTickets and use that to construct new class
+    public TransactionLogImplementation(List gateList) throws java.rmi.RemoteException {
+        this.gateList = gateList;
     }
 
     private Map<Integer, TicketInterface> assignedTickets = new HashMap<>();
@@ -46,11 +50,12 @@ public class TransactionLogImplementation
     public void modifyTicket(int modTicket,
                              LocalDateTime exitTime,
                              TicketStatus newStatus,
-                             boolean isLost) throws RemoteException {
+                             boolean isLost, String exitGate) throws RemoteException {
         TicketInterface ticket = assignedTickets.get(modTicket);
         ticket.setExitTime(exitTime);
         ticket.setStatus(newStatus);
         ticket.setPrice(calculateTicketPrice(ticket, isLost));
+        ticket.setExitGate(exitGate);
     }
 
     public BigDecimal getTicketPrice(int ticketID) throws RemoteException {

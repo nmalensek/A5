@@ -31,22 +31,22 @@ public class FakeTicketGeneration {
     private static LocalDateTime max = LocalDateTime.MAX;
 
     private TicketInterface notLeftYet = new TicketImplementation(
-            twoOclock, LocalDateTime.MAX, testPrice, TicketStatus.UNPAID);
+            twoOclock, LocalDateTime.MAX, testPrice, TicketStatus.UNPAID, "testGate", "testGate");
 
     private TicketInterface[] ticketList = {
-            new TicketImplementation(twoOclock, max, testPrice, TicketStatus.UNPAID),
-            new TicketImplementation(threeOclock, max, testPrice, TicketStatus.UNPAID),
-            new TicketImplementation(threeOclock, max, testPrice, TicketStatus.UNPAID),
-            new TicketImplementation(fourOclock, max, testPrice, TicketStatus.UNPAID),
-            new TicketImplementation(fourOclock, max, testPrice, TicketStatus.UNPAID),
-            new TicketImplementation(fiveOclock, max, testPrice, TicketStatus.UNPAID),
-            new TicketImplementation(twoFiveOneOclock, max, testPrice, TicketStatus.UNPAID),
-            new TicketImplementation(twoFiveTwoOclock, max, testPrice, TicketStatus.UNPAID),
-            new TicketImplementation(twoFourElevenOclock, max, testPrice, TicketStatus.UNPAID),
-            new TicketImplementation(twoFourTenOclock, max, testPrice, TicketStatus.UNPAID),
-            new TicketImplementation(seventeenOneOclock, max, testPrice, TicketStatus.UNPAID),
-            new TicketImplementation(seventeenThreeOclock, max, testPrice, TicketStatus.UNPAID),
-            new TicketImplementation(seventeenThreeOclock, max, testPrice, TicketStatus.UNPAID),
+            new TicketImplementation(twoOclock, max, testPrice, TicketStatus.UNPAID, "testGate", "testGate"),
+            new TicketImplementation(threeOclock, max, testPrice, TicketStatus.UNPAID, "testGate", "testGate"),
+            new TicketImplementation(threeOclock, max, testPrice, TicketStatus.UNPAID, "testGate", "testGate"),
+            new TicketImplementation(fourOclock, max, testPrice, TicketStatus.UNPAID, "testGate", "testGate"),
+            new TicketImplementation(fourOclock, max, testPrice, TicketStatus.UNPAID, "testGate", "testGate"),
+            new TicketImplementation(fiveOclock, max, testPrice, TicketStatus.UNPAID, "testGate", "testGate"),
+            new TicketImplementation(twoFiveOneOclock, max, testPrice, TicketStatus.UNPAID, "testGate", "testGate"),
+            new TicketImplementation(twoFiveTwoOclock, max, testPrice, TicketStatus.UNPAID, "testGate", "testGate"),
+            new TicketImplementation(twoFourElevenOclock, max, testPrice, TicketStatus.UNPAID, "testGate", "testGate"),
+            new TicketImplementation(twoFourTenOclock, max, testPrice, TicketStatus.UNPAID, "testGate", "testGate"),
+            new TicketImplementation(seventeenOneOclock, max, testPrice, TicketStatus.UNPAID, "testGate", "testGate"),
+            new TicketImplementation(seventeenThreeOclock, max, testPrice, TicketStatus.UNPAID, "testGate", "testGate"),
+            new TicketImplementation(seventeenThreeOclock, max, testPrice, TicketStatus.UNPAID, "testGate", "testGate"),
 
     };
 
@@ -79,7 +79,7 @@ public class FakeTicketGeneration {
             for (int i = 0; i < ticketList.length; ++i){
                 tLog.modifyTicket(ticketList[i].getTicketID(),
                         ticketList[i].getEntryTime().plusHours(durationList[i]),
-                        TicketStatus.PAID, false);
+                        TicketStatus.PAID, false, "testGate");
         }
         } catch (RemoteException rE) {
             System.out.println("Unable to mark fake tickets as paid");

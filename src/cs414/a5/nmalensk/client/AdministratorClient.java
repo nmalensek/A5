@@ -11,7 +11,7 @@ import static cs414.a5.nmalensk.client.TextInput.userInput;
 
 public class AdministratorClient {
 
-    private static ReportGenerator reportGenerator;
+    private static ReportGenerationUI reportGenerator;
 
     public static void main(String[] args) {
         ParkingGarageInterface pGI = null;
@@ -24,7 +24,7 @@ public class AdministratorClient {
         }
 
         try {
-            reportGenerator = new ReportGenerator(pGI.getTLog());
+            reportGenerator = new ReportGenerationUI(pGI.getTLog());
             MainMenu();
         } catch (RemoteException re) {
             re.printStackTrace();

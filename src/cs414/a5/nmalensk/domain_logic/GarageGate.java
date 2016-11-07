@@ -1,6 +1,7 @@
 package cs414.a5.nmalensk.domain_logic;
 
 import cs414.a5.nmalensk.client.PaymentHandler;
+import cs414.a5.nmalensk.client.PhysicalGarageGate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

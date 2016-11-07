@@ -2,7 +2,6 @@ package cs414.a5.nmalensk.server;
 
 import cs414.a5.nmalensk.client.PaymentHandler;
 import cs414.a5.nmalensk.common.*;
-import cs414.a5.nmalensk.domain_logic.OccupancySign;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -17,8 +16,10 @@ public class GarageGateImplementation
         implements GarageGateInterface {
 
     private BigDecimal lostTicketPrice = new BigDecimal("25.00").setScale(2, RoundingMode.HALF_UP);
+    private String gateName;
 
-    public GarageGateImplementation() throws java.rmi.RemoteException {
+    public GarageGateImplementation(String gateName) throws java.rmi.RemoteException {
+        this.gateName = gateName;
     }
 
     public void admitCustomer(OccupancySignInterface sign) throws RemoteException {
@@ -31,14 +32,14 @@ public class GarageGateImplementation
 
     public int createTicket(TransactionLogInterface log, BigDecimal price) throws RemoteException {
         TicketInterface newTicket = new TicketImplementation(getTime(),
-                standardExitTime(), price, TicketStatus.UNPAID);
+                standardExitTime(), price, TicketStatus.UNPAID, gateName, null);
         log.addTicket(newTicket);
         return newTicket.getTicketID();
     }
 
     public boolean checkTicket(TransactionLogInterface transl, int customerTicket) throws RemoteException {
         if (transl.isValidTicket(customerTicket)) {
-            transl.modifyTicket(customerTicket, getTime(), TicketStatus.PAID, false);
+            transl.modifyTicket(customerTicket, getTime(), TicketStatus.PAID, false, gateName);
             return true;
         }
         return false;
@@ -46,7 +47,7 @@ public class GarageGateImplementation
 
     public int createAndUpdateLostTicket(TransactionLogInterface log) throws RemoteException {
         int lostTicketID = createTicket(log, lostTicketPrice);
-        log.modifyTicket(lostTicketID, getTime(), TicketStatus.PAID, true);
+        log.modifyTicket(lostTicketID, getTime(), TicketStatus.PAID, true, gateName);
         return lostTicketID;
     }
 
@@ -58,5 +59,9 @@ public class GarageGateImplementation
     public LocalDateTime standardExitTime() {
         LocalDateTime exitTime = LocalDateTime.MAX;
         return exitTime;
+    }
+
+    public String getName() {
+        return gateName;
     }
 }
