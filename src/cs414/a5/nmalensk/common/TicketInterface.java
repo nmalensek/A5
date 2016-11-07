@@ -5,17 +5,19 @@ import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 
 public interface TicketInterface extends java.rmi.Remote {
-    public LocalDateTime getEntryTime() throws RemoteException;
-    public LocalDateTime getExitTime() throws RemoteException;
-    public void setExitTime(LocalDateTime exitTime) throws RemoteException;
-    public int getTicketID() throws RemoteException;
-    public BigDecimal getPrice() throws RemoteException;
-    public void setPrice(BigDecimal newPrice) throws RemoteException;
-    public TicketStatus getStatus() throws RemoteException;
-    public void setStatus(TicketStatus status) throws RemoteException;
-    public void setCurrentTicketID(int id) throws RemoteException;
-    public String getEntryGate() throws RemoteException;
-    public String getExitGate() throws RemoteException;
-    public void setEntryGate(String newEntryGate) throws RemoteException;
-    public void setExitGate(String newExitGate) throws RemoteException;
+     LocalDateTime getEntryTime() throws RemoteException;
+     LocalDateTime getExitTime() throws RemoteException;
+     void setExitTime(LocalDateTime exitTime) throws RemoteException;
+     int getTicketID() throws RemoteException;
+     BigDecimal getPrice() throws RemoteException;
+     void setPrice(BigDecimal newPrice) throws RemoteException;
+     TicketStatus getStatus() throws RemoteException;
+     void setStatus(TicketStatus status) throws RemoteException;
+     void setCurrentTicketID(int id) throws RemoteException;
+     String getEntryGate() throws RemoteException;
+     String getExitGate() throws RemoteException;
+     void setEntryGate(String newEntryGate) throws RemoteException;
+     void setExitGate(String newExitGate) throws RemoteException;
+     boolean getLostStatus() throws RemoteException;
+     void setLostStatus(boolean lostStatus) throws RemoteException;
 }

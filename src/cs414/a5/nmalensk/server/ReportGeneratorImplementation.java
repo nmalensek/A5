@@ -47,8 +47,10 @@ public class ReportGeneratorImplementation
         BigDecimal totalForDay = new BigDecimal("0.00").setScale(2, RoundingMode.HALF_UP);
         BigDecimal totalForRange = new BigDecimal("0.00").setScale(2, RoundingMode.HALF_UP);
         String salesReport = "";
+        String ticketType = "";
 
         for (LocalDateTime key : map.keySet()) {
+            ticketType +=
             totalForDay = totalForDay.add(map.get(key));
             totalForRange = totalForRange.add(map.get(key));
             salesReport += key + ": $" + totalForDay + "\n";

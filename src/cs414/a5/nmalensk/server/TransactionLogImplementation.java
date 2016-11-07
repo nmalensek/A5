@@ -56,6 +56,7 @@ public class TransactionLogImplementation
         ticket.setExitTime(exitTime);
         ticket.setPrice(calculateTicketPrice(ticket, isLost));
         ticket.setExitGate(exitGate);
+        ticket.setLostStatus(isLost);
     }
 
     public BigDecimal getTicketPrice(int ticketID) throws RemoteException {

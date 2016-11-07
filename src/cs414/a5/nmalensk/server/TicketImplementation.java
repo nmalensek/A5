@@ -18,6 +18,7 @@ public class TicketImplementation
     private TicketStatus status;
     private String entryGate;
     private String exitGate;
+    private boolean isLost;
     private static int currentTicketID = 100;
 
     public TicketImplementation(LocalDateTime entryTime, LocalDateTime exitTime,
@@ -31,6 +32,7 @@ public class TicketImplementation
         this.status = status;
         this.entryGate = entryGate;
         this.exitGate = exitGate;
+        isLost = false;
     }
 
     public LocalDateTime getEntryTime() {
@@ -83,5 +85,13 @@ public class TicketImplementation
 
     public void setExitGate(String newExitGate) {
         this.exitGate = newExitGate;
+    }
+
+    public boolean getLostStatus() {
+        return isLost;
+    }
+
+    public void setLostStatus(boolean lostStatus) {
+        isLost = lostStatus;
     }
 }
