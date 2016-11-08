@@ -19,14 +19,6 @@ public interface ReportGeneratorInterface extends java.rmi.Remote {
                                     LocalDateTime start,
                                     LocalDateTime finish) throws RemoteException;
 
-    String printGateEntries(TransactionLogInterface log,
-                            LocalDateTime start,
-                            LocalDateTime finish) throws RemoteException;
-
-    String printGateExits(TransactionLogInterface log,
-                          LocalDateTime start,
-                          LocalDateTime finish) throws RemoteException;
-
     String lostVersusNotTickets(TransactionLogInterface log,
                           LocalDateTime start,
                           LocalDateTime finish) throws RemoteException;

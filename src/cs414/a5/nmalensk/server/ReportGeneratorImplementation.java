@@ -16,11 +16,7 @@ public class ReportGeneratorImplementation
         extends UnicastRemoteObject
         implements ReportGeneratorInterface {
 
-    private List gateList;
-
-
-    public ReportGeneratorImplementation(List gateList) throws RemoteException {
-        this.gateList = gateList;
+    public ReportGeneratorImplementation() throws RemoteException {
     }
 
     public Map<LocalDateTime, BigDecimal> collectDaysWithSales(TransactionLogInterface log,
@@ -77,44 +73,6 @@ public class ReportGeneratorImplementation
             occReport += String.format("%-5s %1s %5s %n", hour, "|", numCars);
         }
         return occReport;
-    }
-
-    public String printGateEntries(TransactionLogInterface log,
-                                   LocalDateTime start, LocalDateTime finish) throws RemoteException {
-        Map<Integer, TicketInterface> assignedTickets = log.getAssignedTickets();
-        String gateReport = String.format("%-5s %5s %n", "Gate  |", "# cars entered");
-        gateReport += "------------------------\n";
-        for (int listPosition = 0; listPosition < gateList.size(); ++listPosition) {
-            int numEntries = 0;
-            GarageGateInterface gGI = (GarageGateInterface) gateList.get(listPosition);
-            for (Integer key : assignedTickets.keySet()) {
-                TicketInterface ticket = assignedTickets.get(key);
-                if (gGI.getName().equals(ticket.getEntryGate())) {
-                    numEntries++;
-                }
-            }
-            gateReport += String.format("%-5s %1s %5s %n", gGI.getName(), "|", numEntries);
-        }
-        return gateReport;
-    }
-
-    public String printGateExits(TransactionLogInterface log,
-                                 LocalDateTime start, LocalDateTime finish) throws RemoteException {
-        Map<Integer, TicketInterface> assignedTickets = log.getAssignedTickets();
-        String gateReport = String.format("%-5s %5s %n", "Gate  |", "# cars exited");
-        gateReport += "------------------------\n";
-        for (int listPosition = 0; listPosition < gateList.size(); ++listPosition) {
-            int numEntries = 0;
-            GarageGateInterface gGI = (GarageGateInterface) gateList.get(listPosition);
-            for (Integer key : assignedTickets.keySet()) {
-                TicketInterface ticket = assignedTickets.get(key);
-                if (gGI.getName().equals(ticket.getExitGate())) {
-                    numEntries++;
-                }
-            }
-            gateReport += String.format("%-5s %1s %5s %n", gGI.getName(), "|", numEntries);
-        }
-        return gateReport;
     }
 
     public String lostVersusNotTickets(TransactionLogInterface log,
