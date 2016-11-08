@@ -34,6 +34,8 @@ public class ReportGenerationUI {
             System.out.println(rGI.printGateEntries(tLI, start, end));
             System.out.println();
             System.out.println(rGI.printGateExits(tLI, start, end));
+        } else if (reportType.equals("tickets")) {
+            System.out.println(rGI.lostVersusNotTickets(tLI, start, end));
         }
     }
 

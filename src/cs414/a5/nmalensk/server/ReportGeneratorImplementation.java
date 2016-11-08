@@ -30,11 +30,9 @@ public class ReportGeneratorImplementation
         Map<LocalDateTime, BigDecimal> salesMap = new TreeMap<>();
         for (Integer key : assignedTickets.keySet()) {
             TicketInterface ticket = assignedTickets.get(key);
-            if (ticket.getStatus().equals(TicketStatus.PAID) && ticket.getExitTime().compareTo(start) >= 0 &&
-                    ticket.getExitTime().compareTo(finish) <= 0) {
+            if (ticketPaidAndInRange(ticket, start, finish)) {
                 if (salesMap.containsKey(ticket.getExitTime().truncatedTo(ChronoUnit.DAYS))) {
-                    salesMap.put(ticket.getExitTime().truncatedTo(ChronoUnit.DAYS),
-                            salesMap.get(ticket.getExitTime().truncatedTo(ChronoUnit.DAYS)).add(ticket.getPrice()));
+                    addTicketSaleToThatDay(salesMap, ticket);
                 } else {
                     salesMap.put(ticket.getExitTime().truncatedTo(ChronoUnit.DAYS), ticket.getPrice());
                 }
@@ -47,16 +45,16 @@ public class ReportGeneratorImplementation
         BigDecimal totalForDay = new BigDecimal("0.00").setScale(2, RoundingMode.HALF_UP);
         BigDecimal totalForRange = new BigDecimal("0.00").setScale(2, RoundingMode.HALF_UP);
         String salesReport = "";
-        String ticketType = "";
 
         for (LocalDateTime key : map.keySet()) {
-            ticketType +=
             totalForDay = totalForDay.add(map.get(key));
             totalForRange = totalForRange.add(map.get(key));
             salesReport += key + ": $" + totalForDay + "\n";
             totalForDay = BigDecimal.ZERO;
         }
-        salesReport += "Total sales in range: $" + totalForRange;
+        salesReport += "Total sales in range: $" + totalForRange + "\n";
+        salesReport += "Average sales per day in range: $" +
+                totalForRange.divide(BigDecimal.valueOf(map.size()), BigDecimal.ROUND_HALF_UP) + "\n";
         return salesReport;
     }
 
@@ -117,5 +115,40 @@ public class ReportGeneratorImplementation
             gateReport += String.format("%-5s %1s %5s %n", gGI.getName(), "|", numEntries);
         }
         return gateReport;
+    }
+
+    public String lostVersusNotTickets(TransactionLogInterface log,
+                                 LocalDateTime start, LocalDateTime finish) throws RemoteException {
+        Map<Integer, TicketInterface> assignedTickets = log.getAssignedTickets();
+        String ticketReport = String.format("%-5s %5s %n", "# normal exits |", "# lost tickets");
+        ticketReport += "--------------------------------\n";
+        int lostTickets = 0;
+        int normalTickets = 0;
+        for (Integer key : assignedTickets.keySet()) {
+            TicketInterface ticket = assignedTickets.get(key);
+            if (ticketPaidAndInRange(ticket, start, finish)) {
+                if (ticket.getLostStatus()) {
+                    lostTickets++;
+                } else {
+                    normalTickets++;
+                }
+            }
+        }
+        ticketReport += String.format("%5s %10s %5s %n", normalTickets, "|", lostTickets);
+        return ticketReport;
+    }
+
+    private boolean ticketPaidAndInRange(TicketInterface ticket,
+                                           LocalDateTime start, LocalDateTime finish) throws RemoteException {
+        if (ticket.getStatus().equals(TicketStatus.PAID) && ticket.getExitTime().compareTo(start) >= 0 &&
+                ticket.getExitTime().compareTo(finish) <= 0) {
+            return true;
+        } else { return false; }
+    }
+
+    private void addTicketSaleToThatDay(Map<LocalDateTime, BigDecimal> map,
+                                        TicketInterface t) throws RemoteException {
+        map.put(t.getExitTime().truncatedTo(ChronoUnit.DAYS),
+                map.get(t.getExitTime().truncatedTo(ChronoUnit.DAYS)).add(t.getPrice()));
     }
 }

@@ -1,6 +1,7 @@
 package cs414.a5.nmalensk.client;
 
 
+import cs414.a5.nmalensk.common.ParkingGarageInterface;
 import cs414.a5.nmalensk.common.TicketInterface;
 import cs414.a5.nmalensk.common.TransactionLogInterface;
 import cs414.a5.nmalensk.domain_logic.TransactionLog;
@@ -50,8 +51,13 @@ public class PaymentHandler {
     }
 
     private BigDecimal handleCreditPayment(BigDecimal amountDue) {
-        System.out.println("Please insert credit card (press enter):");
-        TextInput.pressEnter();
+        System.out.println("Please insert credit card (type number):");
+        try {
+            Integer.parseInt(TextInput.userInput());
+        } catch (NumberFormatException e) {
+            System.out.println("Numbers only!");
+            handleCreditPayment(amountDue);
+        }
         return amountDue;
     }
 

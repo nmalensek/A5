@@ -47,6 +47,7 @@ public class AdministratorClient {
         if (choice.equals("1")) { reportGeneratorUI.generateCustomReport("occupancy"); }
         else if (choice.equals("2")) { reportGeneratorUI.generateCustomReport("sales"); }
         else if (choice.equals("3")) { reportGeneratorUI.generateCustomReport("gate"); }
+        else if (choice.equals("4")) { reportGeneratorUI.generateCustomReport("tickets"); }
         else {
             System.out.println("Please enter a valid option!");
         }
