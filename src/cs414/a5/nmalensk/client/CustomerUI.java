@@ -66,6 +66,7 @@ public class CustomerUI {
 //        pressEnter();
         physicalGate.openGate("enter");
         gGI.admitCustomer(oSI);
+        tLI.updateGates();
 //        pressEnter();
         physicalGate.closeGate();
     }

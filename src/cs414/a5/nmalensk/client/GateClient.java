@@ -1,6 +1,7 @@
 package cs414.a5.nmalensk.client;
 
 import cs414.a5.nmalensk.common.GarageGateInterface;
+import cs414.a5.nmalensk.common.GateGUIInterface;
 import cs414.a5.nmalensk.common.ParkingGarageInterface;
 import cs414.a5.nmalensk.gui.GateGUI;
 import cs414.a5.nmalensk.server.GarageGateImplementation;
@@ -27,7 +28,9 @@ public class GateClient {
         try {
             GarageGateInterface gGI = pGI.initializeGarageGate(gateName);
             pGI.gateInitialized(gGI);
-            GateGUI menu = new GateGUI(pGI, gGI, pGI.getSign());
+            GateGUIInterface menu = new GateGUI(pGI, gGI, pGI.getSign());
+            gGI.registerGateGUI(menu.exportGUI());
+            menu.showGUI();
         } catch (RemoteException re) {
             re.printStackTrace();
             System.exit(-1);

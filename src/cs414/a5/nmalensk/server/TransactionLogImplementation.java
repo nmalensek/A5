@@ -80,4 +80,10 @@ public class TransactionLogImplementation
         ticket.setStatus(TicketStatus.PAID);
         System.out.println("Ticket " + ticketID + " successfully exited");
     }
+
+    public void updateGates() throws RemoteException {
+        for (GarageGateInterface g : gateList) {
+            g.updateGUI();
+        }
+    }
 }

@@ -24,4 +24,6 @@ public interface TransactionLogInterface extends java.rmi.Remote {
                                     boolean isLost) throws RemoteException;
 
     void markTicketPaid(int ticketID) throws RemoteException;
+
+    void updateGates() throws RemoteException;
 }

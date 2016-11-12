@@ -1,7 +1,7 @@
 package cs414.a5.nmalensk.server;
 
-import cs414.a5.nmalensk.client.PaymentHandler;
 import cs414.a5.nmalensk.common.*;
+import cs414.a5.nmalensk.gui.GateGUI;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -17,6 +17,7 @@ public class GarageGateImplementation
 
     private BigDecimal lostTicketPrice = new BigDecimal("25.00").setScale(2, RoundingMode.HALF_UP);
     private String gateName;
+    private GateGUIInterface gui;
 
     public GarageGateImplementation(String gateName) throws java.rmi.RemoteException {
         this.gateName = gateName;
@@ -30,7 +31,7 @@ public class GarageGateImplementation
             sign.addOpenSpaces(1);
     }
 
-    public int createTicket(TransactionLogInterface log, BigDecimal price) throws RemoteException {
+    public synchronized int createTicket(TransactionLogInterface log, BigDecimal price) throws RemoteException {
         TicketInterface newTicket = new TicketImplementation(getTime(),
                 standardExitTime(), price, TicketStatus.UNPAID, gateName, "still in garage");
         log.addTicket(newTicket);
@@ -64,5 +65,13 @@ public class GarageGateImplementation
 
     public String getName() {
         return gateName;
+    }
+
+    public void registerGateGUI(GateGUIInterface gui) throws RemoteException {
+        this.gui = gui;
+    }
+
+    public void updateGUI() throws RemoteException {
+        gui.refreshWindow();
     }
 }

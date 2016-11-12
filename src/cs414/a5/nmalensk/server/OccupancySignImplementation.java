@@ -8,7 +8,7 @@ public class OccupancySignImplementation
         extends UnicastRemoteObject
         implements OccupancySignInterface {
 
-    private int totalSpaces;
+    private static int totalSpaces;
     private int filledSpaces = 0;
 
     public OccupancySignImplementation(int totalSpaces)

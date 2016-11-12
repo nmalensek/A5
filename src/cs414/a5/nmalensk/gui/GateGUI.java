@@ -9,17 +9,20 @@ import cs414.a5.nmalensk.common.*;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.awt.event.ActionEvent;
+import java.rmi.server.UnicastRemoteObject;
 import javax.swing.JLabel;
 
-public class GateGUI {
+public class GateGUI extends UnicastRemoteObject implements GateGUIInterface {
 
 	private JPanel contentPane;
     private OccupancySignInterface oSI;
     private GarageGateInterface gGI;
 	private JFrame customerGUI;
 	private JLabel openSpaces;
+    private JLabel lblSpaceAvailable;
     private int test = 0;
 
 	public GateGUI(ParkingGarageInterface pGI, GarageGateInterface gGI,
@@ -42,8 +45,7 @@ public class GateGUI {
 				try {
 					if(oSI.getOpenSpaces() == 0) { enterButton.setEnabled(false); }
 					else {
-                        System.out.println("enter");
-                        refreshWindow();
+                        cUI.enterGarage();
                     }
 				} catch (RemoteException e1) {
 					e1.printStackTrace();
@@ -62,27 +64,32 @@ public class GateGUI {
 		exitButton.setBounds(116, 199, 226, 43);
 		contentPane.add(exitButton);
 		
-		JLabel lblSpaceAvailable = new JLabel("Space available:");
+		lblSpaceAvailable = new JLabel("Spaces: " + oSI.getOpenSpaces());
 		lblSpaceAvailable.setBounds(26, 28, 114, 16);
 		contentPane.add(lblSpaceAvailable);
 
-        displaySpaceAvailable();
-		showGUI();
+        openSpaces = new JLabel(String.valueOf(oSI.getOpenSpaces()));
+        openSpaces.setBounds(152, 28, 61, 16);
+        contentPane.add(openSpaces);
+
+//		showGUI();
 	}
 
 	public void showGUI() {
 		customerGUI.setVisible(true);
 	}
 
-	public void displaySpaceAvailable() throws RemoteException {
-        openSpaces = new JLabel(String.valueOf(test));
-        openSpaces.setBounds(152, 28, 61, 16);
-        contentPane.add(openSpaces);
+	public void refreshWindow() throws RemoteException {
+        ++test;
+        this.lblSpaceAvailable.setText("Spaces: " + oSI.getOpenSpaces());
+        this.openSpaces.setText(String.valueOf(test));
+        customerGUI.repaint();
+        customerGUI.revalidate();
+        System.out.println("refreshed");
     }
 
-	public void refreshWindow() throws RemoteException {
-        test++;
-        this.openSpaces.setText(String.valueOf(test));
+    public GateGUIInterface exportGUI() throws RemoteException {
+        return this;
     }
 
 }
