@@ -2,6 +2,7 @@ package cs414.a5.nmalensk.client;
 
 import cs414.a5.nmalensk.common.GarageGateInterface;
 import cs414.a5.nmalensk.common.ParkingGarageInterface;
+import cs414.a5.nmalensk.gui.GateGUI;
 import cs414.a5.nmalensk.server.GarageGateImplementation;
 
 import java.net.MalformedURLException;
@@ -10,7 +11,6 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 public class GateClient {
-    //TODO make multiple gates at server startup, command line args for each client to access diff gate
 
     public static void main(String[] args) {
         ParkingGarageInterface pGI = null;
@@ -26,9 +26,8 @@ public class GateClient {
 
         try {
             GarageGateInterface gGI = pGI.initializeGarageGate(gateName);
-            CustomerUI cUI = new CustomerUI(pGI, gGI);
             pGI.gateInitialized(gGI);
-            cUI.initialMessage();
+            GateGUI menu = new GateGUI(pGI, gGI, pGI.getSign());
         } catch (RemoteException re) {
             re.printStackTrace();
             System.exit(-1);

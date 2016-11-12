@@ -21,27 +21,12 @@ public class CustomerUI {
     public CustomerUI(ParkingGarageInterface pGI, GarageGateInterface gGI) throws RemoteException {
         this.pGI = pGI;
         this.gGI = gGI;
-        getRemoteObjects();
-    }
-
-    public void getRemoteObjects() throws RemoteException {
         oSI = pGI.getSign();
         tLI = pGI.getTLog();
     }
 
     PhysicalGarageGate physicalGate = new PhysicalGarageGate();
     PaymentHandler handler = new PaymentHandler();
-
-    public void initialMessage() throws RemoteException {
-        System.out.println(oSI.welcomeMessage());
-        while (oSI.getOpenSpaces() > 0 && vacantOptions()) {
-            System.out.println(oSI.welcomeMessage());
-        }
-        if (oSI.getOpenSpaces() <= 0) {
-            fullOptions();
-            initialMessage();
-        }
-    }
 
     private boolean vacantOptions() throws RemoteException {
         System.out.println("Please enter 1 to enter the garage or 2 to exit the garage.");
@@ -78,10 +63,10 @@ public class CustomerUI {
     public void enterGarage() throws RemoteException {
         int newTicket = gGI.createTicket(tLI, ticketPrice);
         physicalGate.printTicket(newTicket, tLI.retrieveEntryTime(newTicket));
-        pressEnter();
+//        pressEnter();
         physicalGate.openGate("enter");
         gGI.admitCustomer(oSI);
-        pressEnter();
+//        pressEnter();
         physicalGate.closeGate();
     }
 

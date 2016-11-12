@@ -1,5 +1,6 @@
 package cs414.a5.nmalensk.server;
 
+import cs414.a5.nmalensk.common.GarageGateInterface;
 import cs414.a5.nmalensk.common.TicketInterface;
 import cs414.a5.nmalensk.common.TicketStatus;
 import cs414.a5.nmalensk.common.TransactionLogInterface;
@@ -18,9 +19,8 @@ public class TransactionLogImplementation
         extends UnicastRemoteObject
         implements TransactionLogInterface {
 
-    private List gateList;
+    private List<GarageGateInterface> gateList;
 
-    //TODO split report methods into separate class, make getter for assignedTickets and use that to construct new class
     public TransactionLogImplementation(List gateList) throws java.rmi.RemoteException {
         this.gateList = gateList;
     }
