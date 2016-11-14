@@ -1,35 +1,44 @@
 package cs414.a5.nmalensk.gui;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import cs414.a5.nmalensk.client.CustomerUI;
 import cs414.a5.nmalensk.common.*;
 
-import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.awt.event.ActionEvent;
 import java.rmi.server.UnicastRemoteObject;
-import javax.swing.JLabel;
+import java.awt.FlowLayout;
 
 public class GateGUI extends UnicastRemoteObject implements GateGUIInterface {
 
 	private JPanel contentPane;
     private OccupancySignInterface oSI;
     private GarageGateInterface gGI;
+	private CustomerUI cUI;
 	private JFrame customerGUI;
-	private JLabel openSpaces;
-    private JLabel lblSpaceAvailable;
-    private int test = 0;
+	private GateGUI GUI;
+	private JLabel lblSpaceAvailable;
+    private JLayeredPane layeredPane;
+	private JPanel enterPanel;
+	private JPanel movementPanel;
+	private JPanel initialPanel;
 
 	public GateGUI(ParkingGarageInterface pGI, GarageGateInterface gGI,
 				   OccupancySignInterface oSI) throws RemoteException {
         this.oSI = oSI;
         this.gGI = gGI;
-        CustomerUI cUI = new CustomerUI(pGI, gGI);
+        this.cUI = new CustomerUI(pGI, gGI);
+		this.GUI = this;
+	}
+
+	/**
+	 * @wbp.parser.entryPoint
+	 */
+	public void createFrame() throws RemoteException {
 		customerGUI = new JFrame();
 		customerGUI.setTitle("Welcome to the parking garage!");
 		customerGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -39,50 +48,86 @@ public class GateGUI extends UnicastRemoteObject implements GateGUIInterface {
 		customerGUI.setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton enterButton = new JButton("Enter Garage");
+		JLayeredPane mainPane = new JLayeredPane();
+		mainPane.setBounds(6, 6, 438, 266);
+		contentPane.add(mainPane);
+
+		enterPanel = new JPanel();
+		enterPanel.setBounds(6, 85, 426, 134);
+		mainPane.add(enterPanel);
+		enterPanel.setLayout(null);
+		enterPanel.setVisible(false);
+
+		JLabel lblGateIsOpen = new JLabel("Gate is open, please enter garage");
+		lblGateIsOpen.setBounds(107, 6, 217, 29);
+		enterPanel.add(lblGateIsOpen);
+
+		JButton enterButton = new JButton("Enter");
 		enterButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				enterPanel.setVisible(false);
+			}
+		});
+		enterButton.setBounds(143, 57, 117, 29);
+		enterPanel.add(enterButton);
+		
+		movementPanel = new JPanel();
+		movementPanel.setBounds(6, 85, 426, 134);
+		mainPane.add(movementPanel);
+		movementPanel.setVisible(false);
+		
+		JLabel lblGateIsOpening = new JLabel("Gate is opening...");
+		movementPanel.add(lblGateIsOpening);
+		
+		initialPanel = new JPanel();
+		initialPanel.setBounds(6, 95, 426, 106);
+		mainPane.add(initialPanel);
+		initialPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		JButton enterGarageButton = new JButton("Enter Garage");
+		enterGarageButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				try {
-					if(oSI.getOpenSpaces() == 0) { enterButton.setEnabled(false); }
+					if(oSI.getOpenSpaces() == 0) { enterGarageButton.setEnabled(false); }
 					else {
-                        cUI.enterGarage();
-                    }
+						cUI.enterGarage(GUI);
+					}
 				} catch (RemoteException e1) {
 					e1.printStackTrace();
 				}
 			}
 		});
-		enterButton.setBounds(116, 75, 226, 43);
-		contentPane.add(enterButton);
+		initialPanel.add(enterGarageButton);
 		
-		JButton exitButton = new JButton("Exit Garage");
-		exitButton.addActionListener(new ActionListener() {
+		JButton exitGarageButton = new JButton("Exit Garage");
+		exitGarageButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("exit");
 			}
 		});
-		exitButton.setBounds(116, 199, 226, 43);
-		contentPane.add(exitButton);
+		initialPanel.add(exitGarageButton);
 		
-		lblSpaceAvailable = new JLabel("Spaces: " + oSI.getOpenSpaces());
-		lblSpaceAvailable.setBounds(26, 28, 114, 16);
-		contentPane.add(lblSpaceAvailable);
+		lblSpaceAvailable = new JLabel();
+		lblSpaceAvailable.setBounds(6, 18, 108, 16);
+		lblSpaceAvailable.setText("Spaces: " + oSI.getOpenSpaces());
+		mainPane.add(lblSpaceAvailable);
 
-        openSpaces = new JLabel(String.valueOf(oSI.getOpenSpaces()));
-        openSpaces.setBounds(152, 28, 61, 16);
-        contentPane.add(openSpaces);
-
-//		showGUI();
 	}
 
 	public void showGUI() {
 		customerGUI.setVisible(true);
 	}
 
+	public void showEntryPane() { enterPanel.setVisible(true); }
+	public void hideEntryPane() { enterPanel.setVisible(false); }
+
+	public void showMovementPane() { movementPanel.setVisible(true); }
+	public void hideMovementPane() { movementPanel.setVisible(false); }
+
+	public void showInitialPane() { initialPanel.setVisible(true); }
+	public void hideInitialPane() { initialPanel.setVisible(false); }
+
 	public void refreshWindow() throws RemoteException {
-        ++test;
         this.lblSpaceAvailable.setText("Spaces: " + oSI.getOpenSpaces());
-        this.openSpaces.setText(String.valueOf(test));
         customerGUI.repaint();
         customerGUI.revalidate();
         System.out.println("refreshed");
@@ -91,5 +136,4 @@ public class GateGUI extends UnicastRemoteObject implements GateGUIInterface {
     public GateGUIInterface exportGUI() throws RemoteException {
         return this;
     }
-
 }

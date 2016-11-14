@@ -30,6 +30,7 @@ public class GateClient {
             pGI.gateInitialized(gGI);
             GateGUIInterface menu = new GateGUI(pGI, gGI, pGI.getSign());
             gGI.registerGateGUI(menu.exportGUI());
+            menu.createFrame();
             menu.showGUI();
         } catch (RemoteException re) {
             re.printStackTrace();

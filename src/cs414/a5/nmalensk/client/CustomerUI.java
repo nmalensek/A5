@@ -1,10 +1,8 @@
 package cs414.a5.nmalensk.client;
 
-import cs414.a5.nmalensk.common.GarageGateInterface;
-import cs414.a5.nmalensk.common.OccupancySignInterface;
-import cs414.a5.nmalensk.common.ParkingGarageInterface;
-import cs414.a5.nmalensk.common.TransactionLogInterface;
+import cs414.a5.nmalensk.common.*;
 
+import javax.swing.*;
 import java.math.BigDecimal;
 import java.rmi.RemoteException;
 
@@ -28,55 +26,22 @@ public class CustomerUI {
     PhysicalGarageGate physicalGate = new PhysicalGarageGate();
     PaymentHandler handler = new PaymentHandler();
 
-    private boolean vacantOptions() throws RemoteException {
-        System.out.println("Please enter 1 to enter the garage or 2 to exit the garage.");
-        String choice = userInput();
-        if (optionsCheck(choice)) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean optionsCheck(String choice) throws RemoteException {
-        if (choice.equals("1") && thereAreStillOpenSpaces()) {
-            enterGarage();
-        } else if (choice.equals("2")) {
-            exitGarage();
-        } else if (choice.equals("q")) {
-            return false;
-        } else {
-            System.out.println("Invalid input or no more spaces available!\n");
-        }
-        return true;
-    }
-
-    private void fullOptions() throws RemoteException {
-        physicalGate.fullMessage();
-        String choice = userInput();
-        if (!choice.equals("2")) {
-            fullOptions();
-        } else {
-            exitGarage();
-        }
-    }
-
-    public void enterGarage() throws RemoteException {
+    public void enterGarage(GateGUIInterface menu) throws RemoteException {
         int newTicket = gGI.createTicket(tLI, ticketPrice);
         physicalGate.printTicket(newTicket, tLI.retrieveEntryTime(newTicket));
-//        pressEnter();
-        physicalGate.openGate("enter");
+        physicalGate.openGate(menu);
+//        JOptionPane.showMessageDialog(null, "Gate is open, please enter");
         gGI.admitCustomer(oSI);
         tLI.updateGates();
-//        pressEnter();
-        physicalGate.closeGate();
+        physicalGate.closeGate(menu);
     }
 
-    private void exitGarage() throws RemoteException {
+    private void exitGarage(GateGUIInterface menu) throws RemoteException {
         System.out.println("Please enter your ticket ID or 1 for a lost/unavailable ticket:");
         checkTicketValidity();
-        physicalGate.openGate("exit");
+        physicalGate.openGate(menu);
         pressEnter();
-        physicalGate.closeGate();
+        physicalGate.closeGate(menu);
     }
 
     private void checkTicketValidity() throws RemoteException {

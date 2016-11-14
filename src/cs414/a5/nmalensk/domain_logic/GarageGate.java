@@ -16,12 +16,12 @@ public class GarageGate {
 
     public void admitCustomer(OccupancySign sign) {
         sign.addOpenSpaces(-1);
-        pGate.openGate("enter");
+//        pGate.openGate("enter");
     }
 
     public void expelCustomer(OccupancySign sign) {
         sign.addOpenSpaces(1);
-        pGate.openGate("exit");
+//        pGate.openGate("exit");
     }
 
     public Ticket createTicket(TransactionLog log, BigDecimal price) {
@@ -47,7 +47,7 @@ public class GarageGate {
         expelCustomer(sign);
     }
 
-    public void closeGate() { pGate.closeGate(); }
+    public void closeGate() {} //pGate.closeGate(); }
 
 //    public void printTicket(Ticket currentTicket) { pGate.printTicket(currentTicket); }
 
