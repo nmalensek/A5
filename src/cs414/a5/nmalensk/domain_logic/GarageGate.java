@@ -51,7 +51,7 @@ public class GarageGate {
 
 //    public void printTicket(Ticket currentTicket) { pGate.printTicket(currentTicket); }
 
-    public void printFullMessage() { pGate.fullMessage(); }
+//    public void printFullMessage() { pGate.fullMessage(); }
 
     private LocalDateTime getTime() {
         LocalDateTime timestamp = LocalDateTime.now();

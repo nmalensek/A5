@@ -1,13 +1,11 @@
 package cs414.a5.nmalensk.client;
 
 import cs414.a5.nmalensk.common.*;
+import cs414.a5.nmalensk.gui.DialogBoxes;
 
 import javax.swing.*;
 import java.math.BigDecimal;
 import java.rmi.RemoteException;
-
-import static cs414.a5.nmalensk.client.TextInput.pressEnter;
-import static cs414.a5.nmalensk.client.TextInput.userInput;
 
 public class CustomerUI {
     private ParkingGarageInterface pGI;
@@ -15,6 +13,7 @@ public class CustomerUI {
     private OccupancySignInterface oSI;
     private TransactionLogInterface tLI;
     private BigDecimal ticketPrice = BigDecimal.ZERO;
+    DialogBoxes dialog = new DialogBoxes();
 
     public CustomerUI(ParkingGarageInterface pGI, GarageGateInterface gGI) throws RemoteException {
         this.pGI = pGI;
@@ -29,48 +28,50 @@ public class CustomerUI {
     public void enterGarage(GateGUIInterface menu) throws RemoteException {
         int newTicket = gGI.createTicket(tLI, ticketPrice);
         physicalGate.printTicket(newTicket, tLI.retrieveEntryTime(newTicket));
-        physicalGate.openGate(menu);
-//        JOptionPane.showMessageDialog(null, "Gate is open, please enter");
-        gGI.admitCustomer(oSI);
+        physicalGate.openGate(menu, "enter");
+        oSI.addOpenSpaces(-1);
         tLI.updateGates();
-        physicalGate.closeGate(menu);
     }
 
-    private void exitGarage(GateGUIInterface menu) throws RemoteException {
-        System.out.println("Please enter your ticket ID or 1 for a lost/unavailable ticket:");
+    public void exitGarage(GateGUIInterface menu) throws RemoteException {
         checkTicketValidity();
-        physicalGate.openGate(menu);
-        pressEnter();
-        physicalGate.closeGate(menu);
+        physicalGate.openGate(menu, "exit");
+        oSI.addOpenSpaces(1);
+        tLI.updateGates();
     }
 
     private void checkTicketValidity() throws RemoteException {
         while (true) {
             try {
-                int exitTicket = Integer.parseInt(userInput());
+                int exitTicket = Integer.parseInt(
+                        dialog.inputDialog("Please enter your ticket ID or 1 for a lost/unavailable ticket:")
+                );
                 if (exitTicket == 1) {
-                    int lostTicket = gGI.createAndUpdateLostTicket(tLI);
-                    handler.promptForTotal(tLI, lostTicket);
-                    gGI.expelCustomer(oSI);
+                    handleLostTicket();
                     break;
                 } else if(gGI.checkTicket(tLI, exitTicket)) {
-                    System.out.println("Ticket accepted!");
-                    handler.promptForTotal(tLI, exitTicket);
-                    gGI.expelCustomer(oSI);
+                    handleValidTicket(exitTicket);
                     break;
                 } else {
-                    System.out.println("Not a valid ticket ID, please re-enter or enter 1 for " +
-                            "a lost/unavailable ticket:");
+                    dialog.alertDialog("Not a valid ticket ID, please re-enter or enter 1 for " +
+                            "a lost/unavailable ticket", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (NumberFormatException e){
-                System.out.println("Please enter a valid ticket ID format (numbers only):");
+                dialog.alertDialog("Please enter a valid ticket ID format (numbers only)!",
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
-    private boolean thereAreStillOpenSpaces() throws RemoteException {
-        if (oSI.getOpenSpaces() > 0) return true;
-        return false;
+    private void handleLostTicket() throws RemoteException {
+        int lostTicket = gGI.createAndUpdateLostTicket(tLI);
+        handler.promptForTotal(tLI, lostTicket);
     }
+
+    private void handleValidTicket(int exitTicket) throws RemoteException {
+        dialog.alertDialog("Ticket accepted!", JOptionPane.INFORMATION_MESSAGE);
+        handler.promptForTotal(tLI, exitTicket);
+    }
+
 
 }

@@ -26,6 +26,7 @@ public class GateGUI extends UnicastRemoteObject implements GateGUIInterface {
 	private JPanel enterPanel;
 	private JPanel movementPanel;
 	private JPanel initialPanel;
+	private JLayeredPane mainPane;
 
 	public GateGUI(ParkingGarageInterface pGI, GarageGateInterface gGI,
 				   OccupancySignInterface oSI) throws RemoteException {
@@ -48,36 +49,9 @@ public class GateGUI extends UnicastRemoteObject implements GateGUIInterface {
 		customerGUI.setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLayeredPane mainPane = new JLayeredPane();
+		mainPane = new JLayeredPane();
 		mainPane.setBounds(6, 6, 438, 266);
 		contentPane.add(mainPane);
-
-		enterPanel = new JPanel();
-		enterPanel.setBounds(6, 85, 426, 134);
-		mainPane.add(enterPanel);
-		enterPanel.setLayout(null);
-		enterPanel.setVisible(false);
-
-		JLabel lblGateIsOpen = new JLabel("Gate is open, please enter garage");
-		lblGateIsOpen.setBounds(107, 6, 217, 29);
-		enterPanel.add(lblGateIsOpen);
-
-		JButton enterButton = new JButton("Enter");
-		enterButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				enterPanel.setVisible(false);
-			}
-		});
-		enterButton.setBounds(143, 57, 117, 29);
-		enterPanel.add(enterButton);
-		
-		movementPanel = new JPanel();
-		movementPanel.setBounds(6, 85, 426, 134);
-		mainPane.add(movementPanel);
-		movementPanel.setVisible(false);
-		
-		JLabel lblGateIsOpening = new JLabel("Gate is opening...");
-		movementPanel.add(lblGateIsOpening);
 		
 		initialPanel = new JPanel();
 		initialPanel.setBounds(6, 95, 426, 106);
@@ -88,7 +62,9 @@ public class GateGUI extends UnicastRemoteObject implements GateGUIInterface {
 		enterGarageButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if(oSI.getOpenSpaces() == 0) { enterGarageButton.setEnabled(false); }
+					if(oSI.getOpenSpaces() == 0) {
+						enterGarageButton.setEnabled(false);
+					lblSpaceAvailable.setText("Spaces: No space available!");}
 					else {
 						cUI.enterGarage(GUI);
 					}
@@ -102,6 +78,11 @@ public class GateGUI extends UnicastRemoteObject implements GateGUIInterface {
 		JButton exitGarageButton = new JButton("Exit Garage");
 		exitGarageButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				try {
+					cUI.exitGarage(GUI);
+				} catch (RemoteException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 		initialPanel.add(exitGarageButton);
@@ -112,6 +93,9 @@ public class GateGUI extends UnicastRemoteObject implements GateGUIInterface {
 		mainPane.add(lblSpaceAvailable);
 
 	}
+
+	public void addPanel(JPanel panel) { mainPane.add(panel); }
+	public void removePanel(JPanel panel) { mainPane.remove(panel); }
 
 	public void showGUI() {
 		customerGUI.setVisible(true);
