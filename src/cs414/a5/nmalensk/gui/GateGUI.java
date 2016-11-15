@@ -88,7 +88,7 @@ public class GateGUI extends UnicastRemoteObject implements GateGUIInterface {
 		initialPanel.add(exitGarageButton);
 		
 		lblSpaceAvailable = new JLabel();
-		lblSpaceAvailable.setBounds(6, 18, 108, 16);
+		lblSpaceAvailable.setBounds(6, 18, 200, 16);
 		lblSpaceAvailable.setText("Spaces: " + oSI.getOpenSpaces());
 		mainPane.add(lblSpaceAvailable);
 

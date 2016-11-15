@@ -1,7 +1,7 @@
 package cs414.a5.nmalensk.client;
 
 import cs414.a5.nmalensk.common.GateGUIInterface;
-import cs414.a5.nmalensk.gui.CustomerActionPanes;
+import cs414.a5.nmalensk.gui.GateActionPanes;
 
 import javax.swing.*;
 import java.rmi.RemoteException;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class PhysicalGarageGate {
 
     public void openGate(GateGUIInterface menu, String action) throws RemoteException {
-        CustomerActionPanes openPane = new CustomerActionPanes(menu);
+        GateActionPanes openPane = new GateActionPanes(menu);
         openPane.finishedMoving(action  );
         openPane.gateMovement();
     }
