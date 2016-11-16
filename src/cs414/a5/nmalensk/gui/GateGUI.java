@@ -7,7 +7,6 @@ import cs414.a5.nmalensk.client.CustomerUI;
 import cs414.a5.nmalensk.common.*;
 
 import java.awt.event.ActionListener;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.awt.event.ActionEvent;
 import java.rmi.server.UnicastRemoteObject;
@@ -22,9 +21,6 @@ public class GateGUI extends UnicastRemoteObject implements GateGUIInterface {
 	private JFrame customerGUI;
 	private GateGUI GUI;
 	private JLabel lblSpaceAvailable;
-    private JLayeredPane layeredPane;
-	private JPanel enterPanel;
-	private JPanel movementPanel;
 	private JPanel initialPanel;
 	private JLayeredPane mainPane;
 
@@ -91,8 +87,9 @@ public class GateGUI extends UnicastRemoteObject implements GateGUIInterface {
 		lblSpaceAvailable.setBounds(6, 18, 200, 16);
 		lblSpaceAvailable.setText("Spaces: " + oSI.getOpenSpaces());
 		mainPane.add(lblSpaceAvailable);
-
 	}
+
+	public void setLayer(JPanel panel) {mainPane.setLayer(panel, 1);}
 
 	public void addPanel(JPanel panel) { mainPane.add(panel); }
 	public void removePanel(JPanel panel) { mainPane.remove(panel); }
@@ -100,12 +97,6 @@ public class GateGUI extends UnicastRemoteObject implements GateGUIInterface {
 	public void showGUI() {
 		customerGUI.setVisible(true);
 	}
-
-	public void showEntryPane() { enterPanel.setVisible(true); }
-	public void hideEntryPane() { enterPanel.setVisible(false); }
-
-	public void showMovementPane() { movementPanel.setVisible(true); }
-	public void hideMovementPane() { movementPanel.setVisible(false); }
 
 	public void showInitialPane() { initialPanel.setVisible(true); }
 	public void hideInitialPane() { initialPanel.setVisible(false); }

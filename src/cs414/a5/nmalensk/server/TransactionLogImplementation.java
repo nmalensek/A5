@@ -78,7 +78,8 @@ public class TransactionLogImplementation
     public void markTicketPaid(int ticketID) throws RemoteException {
         TicketInterface ticket = assignedTickets.get(ticketID);
         ticket.setStatus(TicketStatus.PAID);
-        System.out.println("Ticket " + ticketID + " successfully exited");
+        System.out.println("Ticket " + ticketID +
+                " successfully exited through gate " + ticket.getExitGate());
     }
 
     public void updateGates() throws RemoteException {

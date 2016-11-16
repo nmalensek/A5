@@ -7,9 +7,9 @@ import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 
 public interface GarageGateInterface extends java.rmi.Remote {
-     void admitCustomer(OccupancySignInterface sign) throws RemoteException;
-
-     void expelCustomer(OccupancySignInterface sign) throws RemoteException;
+//     void admitCustomer(OccupancySignInterface sign) throws RemoteException;
+//
+//     void expelCustomer(OccupancySignInterface sign) throws RemoteException;
 
      int createTicket(TransactionLogInterface log, BigDecimal price) throws RemoteException;
 

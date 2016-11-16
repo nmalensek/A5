@@ -12,11 +12,8 @@ public interface GateGUIInterface extends Remote {
     GateGUIInterface exportGUI() throws RemoteException;
     void refreshWindow() throws RemoteException;
     void addPanel(JPanel panel) throws RemoteException;
+    void setLayer(JPanel panel) throws RemoteException;
     void removePanel(JPanel panel) throws RemoteException;
-    void showEntryPane() throws RemoteException;
-    void hideEntryPane() throws RemoteException;
-    void showMovementPane() throws RemoteException;
-    void hideMovementPane() throws RemoteException;
     void showInitialPane() throws RemoteException;
     void hideInitialPane() throws RemoteException;
     void createFrame() throws RemoteException;

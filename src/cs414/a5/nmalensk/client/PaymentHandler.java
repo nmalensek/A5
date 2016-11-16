@@ -1,29 +1,45 @@
 package cs414.a5.nmalensk.client;
 
 
-import cs414.a5.nmalensk.common.ParkingGarageInterface;
-import cs414.a5.nmalensk.common.TicketInterface;
+import cs414.a5.nmalensk.common.GateGUIInterface;
 import cs414.a5.nmalensk.common.TransactionLogInterface;
-import cs414.a5.nmalensk.domain_logic.TransactionLog;
+import cs414.a5.nmalensk.gui.DialogBoxes;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.rmi.RemoteException;
 
 public class PaymentHandler {
+    private JPanel paymentPanel;
+    private JButton btnCashPayment;
+    private JButton btnCreditPayment;
+    private BigDecimal total;
+    private DialogBoxes dialogs;
+    private int ticketID;
+    private JLabel lblAmountDue;
 
-    public void promptForTotal(TransactionLogInterface log, int ticketID) throws RemoteException {
-        BigDecimal total = log.getTicketPrice(ticketID);
-        BigDecimal zero = new BigDecimal("0.00");
-        while (total.compareTo(zero) > 0) {
-            System.out.println("Balance due: " + total);
-            System.out.println("Please enter 1 to pay cash or 2 to pay credit");
-            total = total.subtract(verifyInput(total, zero));
-        }
-        if (total.compareTo(zero) < 0) {
-            giveChange(total.negate());
-        }
-        log.markTicketPaid(ticketID);
-        System.out.println("Payment accepted, have a nice day!");
+    public PaymentHandler() {
+        dialogs = new DialogBoxes();
+    }
+
+    public void promptForTotal(TransactionLogInterface log, int ticketID,
+                               GateGUIInterface mainMenu) throws RemoteException {
+        total = log.getTicketPrice(ticketID);
+        this.ticketID = ticketID;
+
+        showPaymentGUI(mainMenu, total, log);
+
+//        BigDecimal zero = new BigDecimal("0.00");
+//        while (total.compareTo(zero) > 0) {
+//            total = total.subtract(verifyInput(total, zero));
+//        }
+//        if (total.compareTo(zero) < 0) {
+//            giveChange(total.negate());
+//        }
+//        log.markTicketPaid(ticketID);
+//        System.out.println("Payment accepted, have a nice day!");
     }
 
     public BigDecimal verifyInput(BigDecimal amountDue, BigDecimal nothingDeducted) {
@@ -40,31 +56,92 @@ public class PaymentHandler {
 
     private BigDecimal handleCashPayment() {
         BigDecimal paymentAmount = null;
-        System.out.println("Please insert cash:");
         try {
-            paymentAmount = new BigDecimal(TextInput.userInput());
+            paymentAmount = new BigDecimal(dialogs.inputDialog("Please insert cash:", "Insert cash"));
         } catch (NumberFormatException e) {
-            System.out.println("Please enter an amount");
+            dialogs.alertDialog("Please enter a valid amount (numbers only)",
+                    JOptionPane.ERROR_MESSAGE);
             handleCashPayment();
         }
         return paymentAmount;
     }
 
     private BigDecimal handleCreditPayment(BigDecimal amountDue) {
-        System.out.println("Please insert credit card (type number):");
         try {
-            Integer.parseInt(TextInput.userInput());
+            int cardNumber = Integer.parseInt(
+            dialogs.inputDialog("Please insert credit card (type number):",
+                    "Enter card number"));
         } catch (NumberFormatException e) {
-            System.out.println("Numbers only!");
+            dialogs.alertDialog("Please enter a valid ticket ID format (numbers only)!",
+                    JOptionPane.ERROR_MESSAGE);
             handleCreditPayment(amountDue);
         }
         return amountDue;
     }
 
-    private void giveChange(BigDecimal changeAmount) {
-        System.out.println("Your change is " + changeAmount);
-        System.out.println("Please take change (press enter)");
-        TextInput.pressEnter();
+    private void cashPayment(TransactionLogInterface log) throws RemoteException {
+        total = total.subtract(handleCashPayment());
+        if (total.compareTo(BigDecimal.ZERO) > 0) {
+            lblAmountDue.setText("Amount due: " + String.valueOf(total));
+        } else {
+            giveChange(total.negate());
+            log.markTicketPaid(ticketID);
+            paymentPanel.setVisible(false);
+        }
     }
 
+    private void cardPayment(TransactionLogInterface log) throws RemoteException {
+        total = total.subtract(handleCreditPayment(total));
+        dialogs.alertDialog("Payment accepted!", JOptionPane.INFORMATION_MESSAGE);
+        log.markTicketPaid(ticketID);
+        paymentPanel.setVisible(false);
+    }
+
+    private void giveChange(BigDecimal changeAmount) {
+        dialogs.alertDialog("Your change is " + changeAmount + "," +
+        " Please take change", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void showPaymentGUI(GateGUIInterface mainMenu, BigDecimal total, TransactionLogInterface log) throws RemoteException {
+        paymentPanel = new JPanel();
+        paymentPanel.setBounds(6, 67, 426, 400);
+        paymentPanel.setLayout(null);
+        paymentPanel.setVisible(false);
+
+        mainMenu.setLayer(paymentPanel);
+
+        btnCashPayment = new JButton("Cash payment");
+        btnCashPayment.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    cashPayment(log);
+                } catch (RemoteException e1) {
+
+                }
+            }
+        });
+        btnCashPayment.setBounds(40, 56, 133, 29);
+        paymentPanel.add(btnCashPayment);
+
+        btnCreditPayment = new JButton("Credit payment");
+        btnCreditPayment.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    cardPayment(log);
+                } catch (RemoteException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        btnCreditPayment.setBounds(231, 56, 147, 29);
+        paymentPanel.add(btnCreditPayment);
+
+        lblAmountDue = new JLabel("Amount due: " + String.valueOf(total));
+        lblAmountDue.setBounds(169, 6, 150, 16);
+        paymentPanel.add(lblAmountDue);
+
+        mainMenu.hideInitialPane();
+        mainMenu.addPanel(paymentPanel);
+        paymentPanel.setVisible(true);
+    }
 }

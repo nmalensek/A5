@@ -34,23 +34,24 @@ public class CustomerUI {
     }
 
     public void exitGarage(GateGUIInterface menu) throws RemoteException {
-        checkTicketValidity();
+        checkTicketValidity(menu);
         physicalGate.openGate(menu, "exit");
         oSI.addOpenSpaces(1);
         tLI.updateGates();
     }
 
-    private void checkTicketValidity() throws RemoteException {
+    private void checkTicketValidity(GateGUIInterface menu) throws RemoteException {
         while (true) {
             try {
                 int exitTicket = Integer.parseInt(
-                        dialog.inputDialog("Please enter your ticket ID or 1 for a lost/unavailable ticket:")
+                        dialog.inputDialog("Please enter your ticket ID or 1 for a lost/unavailable ticket:",
+                                "Enter ticket ID")
                 );
                 if (exitTicket == 1) {
-                    handleLostTicket();
+                    handleLostTicket(menu);
                     break;
                 } else if(gGI.checkTicket(tLI, exitTicket)) {
-                    handleValidTicket(exitTicket);
+                    handleValidTicket(exitTicket, menu);
                     break;
                 } else {
                     dialog.alertDialog("Not a valid ticket ID, please re-enter or enter 1 for " +
@@ -63,14 +64,14 @@ public class CustomerUI {
         }
     }
 
-    private void handleLostTicket() throws RemoteException {
+    private void handleLostTicket(GateGUIInterface menu) throws RemoteException {
         int lostTicket = gGI.createAndUpdateLostTicket(tLI);
-        handler.promptForTotal(tLI, lostTicket);
+        handler.promptForTotal(tLI, lostTicket, menu);
     }
 
-    private void handleValidTicket(int exitTicket) throws RemoteException {
+    private void handleValidTicket(int exitTicket, GateGUIInterface menu) throws RemoteException {
         dialog.alertDialog("Ticket accepted!", JOptionPane.INFORMATION_MESSAGE);
-        handler.promptForTotal(tLI, exitTicket);
+        handler.promptForTotal(tLI, exitTicket, menu);
     }
 
 

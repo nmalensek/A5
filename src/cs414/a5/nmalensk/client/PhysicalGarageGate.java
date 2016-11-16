@@ -11,7 +11,7 @@ public class PhysicalGarageGate {
 
     public void openGate(GateGUIInterface menu, String action) throws RemoteException {
         GateActionPanes openPane = new GateActionPanes(menu);
-        openPane.finishedMoving(action  );
+        openPane.finishedMoving(action);
         openPane.gateMovement();
     }
 

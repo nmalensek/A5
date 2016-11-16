@@ -16,12 +16,6 @@ public class OccupancySignImplementation
         this.totalSpaces = totalSpaces;
     }
 
-    public String welcomeMessage() {
-        String welcome = "Welcome to the parking garage!\n" +
-                "Space available in garage: " + getOpenSpaces() + "\n";
-        return welcome;
-    }
-
     public int getOpenSpaces() {
         int openSpaces = (this.totalSpaces - filledSpaces);
         return openSpaces;

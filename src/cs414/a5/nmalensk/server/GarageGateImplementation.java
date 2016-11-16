@@ -23,14 +23,6 @@ public class GarageGateImplementation
         this.gateName = gateName;
     }
 
-    public void admitCustomer(OccupancySignInterface sign) throws RemoteException {
-        sign.addOpenSpaces(-1);
-    }
-
-    public void expelCustomer(OccupancySignInterface sign) throws RemoteException {
-            sign.addOpenSpaces(1);
-    }
-
     public synchronized int createTicket(TransactionLogInterface log, BigDecimal price) throws RemoteException {
         TicketInterface newTicket = new TicketImplementation(getTime(),
                 standardExitTime(), price, TicketStatus.UNPAID, gateName, "still in garage");
