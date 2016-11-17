@@ -23,6 +23,7 @@ public class GateGUI extends UnicastRemoteObject implements GateGUIInterface {
 	private JLabel lblSpaceAvailable;
 	private JPanel initialPanel;
 	private JLayeredPane mainPane;
+	private JButton enterGarageButton;
 
 	public GateGUI(ParkingGarageInterface pGI, GarageGateInterface gGI,
 				   OccupancySignInterface oSI) throws RemoteException {
@@ -54,7 +55,7 @@ public class GateGUI extends UnicastRemoteObject implements GateGUIInterface {
 		mainPane.add(initialPanel);
 		initialPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		JButton enterGarageButton = new JButton("Enter Garage");
+		enterGarageButton = new JButton("Enter Garage");
 		enterGarageButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -102,11 +103,20 @@ public class GateGUI extends UnicastRemoteObject implements GateGUIInterface {
 	public void hideInitialPane() { initialPanel.setVisible(false); }
 
 	public void refreshWindow() throws RemoteException {
-        this.lblSpaceAvailable.setText("Spaces: " + oSI.getOpenSpaces());
+        isSpaceAvailable();
         customerGUI.repaint();
         customerGUI.revalidate();
-        System.out.println("refreshed");
     }
+
+    private void isSpaceAvailable() throws RemoteException {
+		if (oSI.getOpenSpaces() == 0) {
+			enterGarageButton.setEnabled(false);
+			this.lblSpaceAvailable.setText("Spaces: No space available!");
+		} else {
+			enterGarageButton.setEnabled(true);
+			this.lblSpaceAvailable.setText("Spaces: " + oSI.getOpenSpaces());
+		}
+	}
 
     public GateGUIInterface exportGUI() throws RemoteException {
         return this;

@@ -1,9 +1,8 @@
 package cs414.a5.nmalensk.client;
 
 import cs414.a5.nmalensk.common.*;
-import cs414.a5.nmalensk.gui.DialogBoxes;
+import cs414.a5.nmalensk.gui.TicketInputGUI;
 
-import javax.swing.*;
 import java.math.BigDecimal;
 import java.rmi.RemoteException;
 
@@ -13,7 +12,6 @@ public class CustomerUI {
     private OccupancySignInterface oSI;
     private TransactionLogInterface tLI;
     private BigDecimal ticketPrice = BigDecimal.ZERO;
-    DialogBoxes dialog = new DialogBoxes();
 
     public CustomerUI(ParkingGarageInterface pGI, GarageGateInterface gGI) throws RemoteException {
         this.pGI = pGI;
@@ -41,37 +39,9 @@ public class CustomerUI {
     }
 
     private void checkTicketValidity(GateGUIInterface menu) throws RemoteException {
-        while (true) {
-            try {
-                int exitTicket = Integer.parseInt(
-                        dialog.inputDialog("Please enter your ticket ID or 1 for a lost/unavailable ticket:",
-                                "Enter ticket ID")
-                );
-                if (exitTicket == 1) {
-                    handleLostTicket(menu);
-                    break;
-                } else if(gGI.checkTicket(tLI, exitTicket)) {
-                    handleValidTicket(exitTicket, menu);
-                    break;
-                } else {
-                    dialog.alertDialog("Not a valid ticket ID, please re-enter or enter 1 for " +
-                            "a lost/unavailable ticket", JOptionPane.ERROR_MESSAGE);
-                }
-            } catch (NumberFormatException e){
-                dialog.alertDialog("Please enter a valid ticket ID format (numbers only)!",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
+        TicketInputGUI tIG = new TicketInputGUI();
+        tIG.showTicketInput(menu, gGI, tLI, handler);
 
-    private void handleLostTicket(GateGUIInterface menu) throws RemoteException {
-        int lostTicket = gGI.createAndUpdateLostTicket(tLI);
-        handler.promptForTotal(tLI, lostTicket, menu);
-    }
-
-    private void handleValidTicket(int exitTicket, GateGUIInterface menu) throws RemoteException {
-        dialog.alertDialog("Ticket accepted!", JOptionPane.INFORMATION_MESSAGE);
-        handler.promptForTotal(tLI, exitTicket, menu);
     }
 
 
