@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -30,25 +31,6 @@ public class AdministratorGUI extends JFrame {
 	private TransactionLogInterface log;
 	private List gateList;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AdministratorGUI frame = new AdministratorGUI();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public AdministratorGUI(TransactionLogInterface log, List gateList) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -119,6 +101,8 @@ public class AdministratorGUI extends JFrame {
 				} catch (DateTimeParseException dtpe) {
 					error.alertDialog("Invalid input, please check your formatting!",
 							JOptionPane.ERROR_MESSAGE);
+				} catch (RemoteException e1) {
+					e1.printStackTrace();
 				}
 			}
 		});
@@ -126,6 +110,7 @@ public class AdministratorGUI extends JFrame {
 		error = new DialogBoxes();
 		this.log = log;
 		this.gateList = gateList;
+
 	}
 
 	private String getDateTime(JTextField dateField, JTextField timeField) {
@@ -146,8 +131,8 @@ public class AdministratorGUI extends JFrame {
 		return LocalDateTime.parse(dateTime);
 	}
 
-	private void createReportGUI(LocalDateTime start, LocalDateTime end) {
-		ReportGenerationGUI reportGenerationGUI = new ReportGenerationGUI();
+	private void createReportGUI(LocalDateTime start, LocalDateTime end) throws RemoteException {
+		ReportGenerationGUI reportGenerationGUI = new ReportGenerationGUI(log, gateList);
 		reportGenerationGUI.showReportGenerationGUI(this, start, end);
 		hideInitialPane();
 	}

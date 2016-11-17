@@ -77,6 +77,11 @@ public class ReportGenerationGUI {
         btnSales = new JButton("Sales");
         btnSales.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                try {
+                    generateSalesReport(start, end);
+                } catch (RemoteException e1) {
+                    e1.printStackTrace();
+                }
             }
         });
         btnSales.setBounds(235, 99, 157, 29);
@@ -85,6 +90,11 @@ public class ReportGenerationGUI {
         btnGateEntryexit = new JButton("Gate entries/exits");
         btnGateEntryexit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                try {
+                    generateGateReport(start, end);
+                } catch (RemoteException e1) {
+                    e1.printStackTrace();
+                }
             }
         });
         btnGateEntryexit.setBounds(34, 168, 157, 29);
@@ -93,6 +103,11 @@ public class ReportGenerationGUI {
         btnNormallostTickets = new JButton("Normal/lost tickets");
         btnNormallostTickets.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                try {
+                    generateLostTicketReport(start, end);
+                } catch (RemoteException e1) {
+                    e1.printStackTrace();
+                }
             }
         });
         btnNormallostTickets.setBounds(235, 168, 157, 29);
@@ -114,8 +129,25 @@ public class ReportGenerationGUI {
     }
 
     private void generateOccupancyReport(LocalDateTime start, LocalDateTime end) throws RemoteException {
-        dialog.alertDialog(rGI.printHourlyOccupancyData(log, start, end), JOptionPane.INFORMATION_MESSAGE);
+        dialog.alertDialog(rGI.printHourlyOccupancyData(log, start, end),
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
+    private void generateSalesReport(LocalDateTime start, LocalDateTime end) throws RemoteException {
+        dialog.alertDialog(rGI.printDailySalesReport(rGI.collectDaysWithSales(log, start, end)),
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void generateGateReport(LocalDateTime start, LocalDateTime end) throws RemoteException {
+        dialog.alertDialog(gateReports.printGateEntries(log, start, end),
+                JOptionPane.INFORMATION_MESSAGE);
+        dialog.alertDialog(gateReports.printGateExits(log, start, end),
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void generateLostTicketReport(LocalDateTime start, LocalDateTime end) throws RemoteException {
+        dialog.alertDialog(rGI.lostVersusNotTickets(log, start, end),
+                JOptionPane.INFORMATION_MESSAGE);
+    }
 
 }
