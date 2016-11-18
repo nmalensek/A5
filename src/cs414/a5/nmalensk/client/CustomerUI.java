@@ -1,6 +1,7 @@
 package cs414.a5.nmalensk.client;
 
 import cs414.a5.nmalensk.common.*;
+import cs414.a5.nmalensk.gui.PaymentHandlerGUI;
 import cs414.a5.nmalensk.gui.TicketInputGUI;
 
 import java.math.BigDecimal;
@@ -21,7 +22,7 @@ public class CustomerUI {
     }
 
     PhysicalGarageGate physicalGate = new PhysicalGarageGate();
-    PaymentHandler handler = new PaymentHandler();
+    PaymentHandlerGUI handler = new PaymentHandlerGUI();
 
     public void enterGarage(GateGUIInterface menu) throws RemoteException {
         int newTicket = gGI.createTicket(tLI, ticketPrice);

@@ -1,9 +1,6 @@
 package cs414.a5.nmalensk.server;
 
-import cs414.a5.nmalensk.common.GarageGateInterface;
-import cs414.a5.nmalensk.common.GateReportGeneratorInterface;
-import cs414.a5.nmalensk.common.TicketInterface;
-import cs414.a5.nmalensk.common.TransactionLogInterface;
+import cs414.a5.nmalensk.common.*;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -24,39 +21,51 @@ implements GateReportGeneratorInterface {
     public String printGateEntries(TransactionLogInterface log,
                                    LocalDateTime start, LocalDateTime finish) throws RemoteException {
         Map<Integer, TicketInterface> assignedTickets = log.getAssignedTickets();
-        String gateReport = String.format("%-5s %5s %n", "Gate  |", "# cars entered");
-        gateReport += "------------------------\n";
+        String gateReport = String.format("%-5s %5s %8s %n", "Gate  |", "# cars entered |", "# cars exited");
+        gateReport += "----------------------------------\n";
         for (int listPosition = 0; listPosition < gateList.size(); ++listPosition) {
             int numEntries = 0;
+            int numExits = 0;
             GarageGateInterface gGI = (GarageGateInterface) gateList.get(listPosition);
             for (Integer key : assignedTickets.keySet()) {
                 TicketInterface ticket = assignedTickets.get(key);
-                if (gGI.getName().equals(ticket.getEntryGate())) {
-                    numEntries++;
+                if (gGI.getName().equals(ticket.getEntryGate()) && enteredInRange(ticket, start)) {
+                    numEntries += addGateEntries(gGI, ticket);
+                }
+                if (gGI.getName().equals(ticket.getExitGate()) && exitedInRange(ticket, finish)) {
+                    numExits += addGateExits(gGI, ticket);
                 }
             }
-            gateReport += String.format("%-5s %1s %5s %n", gGI.getName(), "|", numEntries);
+            gateReport += String.format("%-6s %1s %13s %11s %7s %n", gGI.getName(),
+                    "|", numEntries, "|", numExits);
         }
         return gateReport;
     }
 
-    public String printGateExits(TransactionLogInterface log,
-                                 LocalDateTime start, LocalDateTime finish) throws RemoteException {
-        Map<Integer, TicketInterface> assignedTickets = log.getAssignedTickets();
-        String gateReport = String.format("%-5s %5s %n", "Gate  |", "# cars exited");
-        gateReport += "------------------------\n";
-        for (int listPosition = 0; listPosition < gateList.size(); ++listPosition) {
-            int numEntries = 0;
-            GarageGateInterface gGI = (GarageGateInterface) gateList.get(listPosition);
-            for (Integer key : assignedTickets.keySet()) {
-                TicketInterface ticket = assignedTickets.get(key);
-                if (gGI.getName().equals(ticket.getExitGate())) {
-                    numEntries++;
-                }
-            }
-            gateReport += String.format("%-5s %1s %5s %n", gGI.getName(), "|", numEntries);
+    private boolean enteredInRange(TicketInterface ticket, LocalDateTime start)
+            throws RemoteException {
+        if (ticket.getEntryTime().compareTo(start) >= 0) {
+            return true;
+        } else {
+            return false;
         }
-        return gateReport;
+    }
+
+    private boolean exitedInRange(TicketInterface ticket, LocalDateTime finish)
+            throws RemoteException {
+        if (ticket.getExitTime().compareTo(finish) <= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private int addGateEntries(GarageGateInterface gGI, TicketInterface ticket) {
+            return 1;
+    }
+
+    private int addGateExits(GarageGateInterface gGI, TicketInterface ticket) {
+            return 1;
     }
 
 }

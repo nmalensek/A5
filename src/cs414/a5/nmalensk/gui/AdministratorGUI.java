@@ -111,15 +111,15 @@ public class AdministratorGUI extends JFrame {
 		this.log = log;
 		this.gateList = gateList;
 
+		txtStartdate.setText("2016-10-01");
+		txtEnddate.setText("2016-10-29");
+		txtStarttime.setText("08:00");
+		txtEndTime.setText("23:00");
 	}
 
 	private String getDateTime(JTextField dateField, JTextField timeField) {
 		setDateTime(dateField, timeField);
-		String formattedDateTime = "";
-		formattedDateTime += dateField.getText();
-		formattedDateTime += "T";
-		formattedDateTime += timeField.getText();
-		return formattedDateTime;
+		return dateField.getText() + "T" + timeField.getText();
 	}
 
 	private void setDateTime(JTextField dateField, JTextField timeField) {
@@ -142,6 +142,5 @@ public class AdministratorGUI extends JFrame {
 	public void showInitialPane() { initialPanel.setVisible(true); }
 	public void hideInitialPane() { initialPanel.setVisible(false); }
 
-	public void addPanel(JPanel panel) { mainPane.add(panel); }
 	public void removePanel(JPanel panel) { mainPane.remove(panel); }
 }

@@ -1,7 +1,8 @@
-package cs414.a5.nmalensk.client;
+package cs414.a5.nmalensk.gui;
 
 
 import cs414.a5.nmalensk.common.GateGUIInterface;
+import cs414.a5.nmalensk.common.TicketInterface;
 import cs414.a5.nmalensk.common.TransactionLogInterface;
 import cs414.a5.nmalensk.gui.DialogBoxes;
 
@@ -11,7 +12,7 @@ import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.rmi.RemoteException;
 
-public class PaymentHandler {
+public class PaymentHandlerGUI {
     private JPanel paymentPanel;
     private JButton btnCashPayment;
     private JButton btnCreditPayment;
@@ -20,7 +21,7 @@ public class PaymentHandler {
     private int ticketID;
     private JLabel lblAmountDue;
 
-    public PaymentHandler() {
+    public PaymentHandlerGUI() {
         dialogs = new DialogBoxes();
     }
 
@@ -46,7 +47,7 @@ public class PaymentHandler {
             public void actionPerformed(ActionEvent e) {
                 try {
                     cashPayment(log);
-                } catch (RemoteException e1) {
+                } catch (RemoteException | NullPointerException renpe) {
 
                 }
             }
@@ -83,7 +84,6 @@ public class PaymentHandler {
         } catch (NumberFormatException e) {
             dialogs.alertDialog("Please enter a valid amount (numbers only)",
                     JOptionPane.ERROR_MESSAGE);
-            handleCashPayment();
         }
         return paymentAmount;
     }

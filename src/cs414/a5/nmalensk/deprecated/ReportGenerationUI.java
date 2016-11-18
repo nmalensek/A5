@@ -1,9 +1,8 @@
-package cs414.a5.nmalensk.client;
+package cs414.a5.nmalensk.deprecated;
 
 import cs414.a5.nmalensk.common.GateReportGeneratorInterface;
 import cs414.a5.nmalensk.common.ReportGeneratorInterface;
 import cs414.a5.nmalensk.common.TransactionLogInterface;
-import cs414.a5.nmalensk.domain_logic.TransactionLog;
 import cs414.a5.nmalensk.server.GateReportGeneratorImplementation;
 import cs414.a5.nmalensk.server.ReportGeneratorImplementation;
 
@@ -12,7 +11,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
-import static cs414.a5.nmalensk.client.TextInput.userInput;
+import static cs414.a5.nmalensk.deprecated.TextInput.userInput;
 
 public class ReportGenerationUI {
     private LocalDateTime start;
@@ -37,7 +36,7 @@ public class ReportGenerationUI {
         } else if (reportType.equals("gate")) {
             System.out.println(gateReports.printGateEntries(tLI, start, end));
             System.out.println();
-            System.out.println(gateReports.printGateExits(tLI, start, end));
+            System.out.println(gateReports.printGateEntries(tLI, start, end));
         } else if (reportType.equals("tickets")) {
             System.out.println(rGI.lostVersusNotTickets(tLI, start, end));
         }

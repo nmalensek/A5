@@ -1,7 +1,5 @@
 package cs414.a5.nmalensk.gui;
 
-
-import cs414.a5.nmalensk.client.PaymentHandler;
 import cs414.a5.nmalensk.common.GarageGateInterface;
 import cs414.a5.nmalensk.common.GateGUIInterface;
 import cs414.a5.nmalensk.common.TransactionLogInterface;
@@ -25,7 +23,7 @@ public class TicketInputGUI {
     }
 
     public void showTicketInput(GateGUIInterface mainMenu, GarageGateInterface gGI,
-                                  TransactionLogInterface tLI, PaymentHandler handler) throws RemoteException {
+                                  TransactionLogInterface tLI, PaymentHandlerGUI handler) throws RemoteException {
         ticketPanel = new JPanel();
         ticketPanel.setBounds(6, 67, 426, 400);
         ticketPanel.setLayout(null);
@@ -78,7 +76,7 @@ public class TicketInputGUI {
 
 
     private void handleValidTicket(GateGUIInterface menu, GarageGateInterface gate, TransactionLogInterface log,
-                                    PaymentHandler handler, String input) throws RemoteException {
+                                   PaymentHandlerGUI handler, String input) throws RemoteException {
         try {
             int exitTicket = Integer.parseInt(input);
             if (gate.checkTicket(log, exitTicket)) {
@@ -87,17 +85,18 @@ public class TicketInputGUI {
                 menu.removePanel(ticketPanel);
                 handler.promptForTotal(log, exitTicket, menu);
             } else {
-                dialogs.alertDialog("Invalid ticket ID, re-enter or select 'Lost ticket'",
+                dialogs.alertDialog("Invalid ticket ID, re-enter or select 'Lost ticket'.",
                         JOptionPane.ERROR_MESSAGE);
             }
         } catch (NumberFormatException nfe) {
             dialogs.alertDialog("Please enter a valid ticket ID (numbers only)!",
                     JOptionPane.ERROR_MESSAGE);
+            showTicketInput(menu, gate, log, handler);
         }
     }
 
     private void handleLostTicket(GateGUIInterface menu, GarageGateInterface gate, TransactionLogInterface log,
-                                  PaymentHandler handler) throws RemoteException {
+                                  PaymentHandlerGUI handler) throws RemoteException {
         int lostTicket = gate.createAndUpdateLostTicket(log);
         ticketPanel.setVisible(false);
         menu.removePanel(ticketPanel);

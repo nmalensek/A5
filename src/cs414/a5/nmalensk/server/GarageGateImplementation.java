@@ -40,9 +40,12 @@ public class GarageGateImplementation
     }
 
     public int createAndUpdateLostTicket(TransactionLogInterface log) throws RemoteException {
-        int lostTicketID = createTicket(log, lostTicketPrice);
-        log.modifyTicket(lostTicketID, getTime(), true, gateName);
-        return lostTicketID;
+        TicketInterface lostTicket = new TicketImplementation(getTime(),
+                getTime(), lostTicketPrice, TicketStatus.UNPAID, "unknown", gateName);
+        lostTicket.setLostStatus(true);
+        log.addTicket(lostTicket);
+        System.out.println("Lost ticket " + lostTicket.getTicketID() + " successfully created!");
+        return lostTicket.getTicketID();
     }
 
     public LocalDateTime getTime() {

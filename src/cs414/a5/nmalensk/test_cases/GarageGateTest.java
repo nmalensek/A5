@@ -1,9 +1,9 @@
 package cs414.a5.nmalensk.test_cases;
 
-import cs414.a5.nmalensk.domain_logic.GarageGate;
-import cs414.a5.nmalensk.domain_logic.OccupancySign;
-import cs414.a5.nmalensk.domain_logic.Ticket;
-import cs414.a5.nmalensk.domain_logic.TransactionLog;
+import cs414.a5.nmalensk.deprecated.domain_logic.GarageGate;
+import cs414.a5.nmalensk.deprecated.domain_logic.OccupancySign;
+import cs414.a5.nmalensk.deprecated.domain_logic.Ticket;
+import cs414.a5.nmalensk.deprecated.domain_logic.TransactionLog;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

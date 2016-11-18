@@ -48,6 +48,7 @@ public class ReportGeneratorImplementation
             salesReport += key + ": $" + totalForDay + "\n";
             totalForDay = BigDecimal.ZERO;
         }
+        salesReport += "-----------------------\n";
         salesReport += "Total sales in range: $" + totalForRange + "\n";
         salesReport += "Average sales per day in range: $" +
                 totalForRange.divide(BigDecimal.valueOf(map.size()), BigDecimal.ROUND_HALF_UP) + "\n";

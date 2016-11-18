@@ -1,4 +1,4 @@
-package cs414.a5.nmalensk.client;
+package cs414.a5.nmalensk.deprecated;
 
 import java.util.Scanner;
 

@@ -2,14 +2,11 @@ package cs414.a5.nmalensk.client;
 
 import cs414.a5.nmalensk.common.ParkingGarageInterface;
 import cs414.a5.nmalensk.gui.AdministratorGUI;
-import cs414.a5.nmalensk.gui.ReportGenerationGUI;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-
-import static cs414.a5.nmalensk.client.TextInput.userInput;
 
 public class AdministratorClient {
 

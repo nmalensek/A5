@@ -141,8 +141,6 @@ public class ReportGenerationGUI {
     private void generateGateReport(LocalDateTime start, LocalDateTime end) throws RemoteException {
         dialog.alertDialog(gateReports.printGateEntries(log, start, end),
                 JOptionPane.INFORMATION_MESSAGE);
-        dialog.alertDialog(gateReports.printGateExits(log, start, end),
-                JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void generateLostTicketReport(LocalDateTime start, LocalDateTime end) throws RemoteException {
