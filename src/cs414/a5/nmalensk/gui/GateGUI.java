@@ -24,6 +24,7 @@ public class GateGUI extends UnicastRemoteObject implements GateGUIInterface {
 	private JPanel initialPanel;
 	private JLayeredPane mainPane;
 	private JButton enterGarageButton;
+	private ParkingGarageInterface pGI;
 
 	public GateGUI(ParkingGarageInterface pGI, GarageGateInterface gGI,
 				   OccupancySignInterface oSI) throws RemoteException {
@@ -31,6 +32,7 @@ public class GateGUI extends UnicastRemoteObject implements GateGUIInterface {
         this.gGI = gGI;
         this.cUI = new CustomerUI(pGI, gGI);
 		this.GUI = this;
+		this.pGI = pGI;
 	}
 
 	/**
@@ -38,8 +40,7 @@ public class GateGUI extends UnicastRemoteObject implements GateGUIInterface {
 	 */
 	public void createFrame() throws RemoteException {
 		customerGUI = new JFrame();
-		customerGUI.setTitle("Welcome to the parking garage!");
-		customerGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		customerGUI.setTitle("Welcome to the parking garage! You are at gate " + gGI.getName());
 		customerGUI.setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -83,6 +84,18 @@ public class GateGUI extends UnicastRemoteObject implements GateGUIInterface {
 			}
 		});
 		initialPanel.add(exitGarageButton);
+
+		customerGUI.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				try {
+					pGI.gateShutDown(gGI);
+					System.exit(0);
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		
 		lblSpaceAvailable = new JLabel();
 		lblSpaceAvailable.setBounds(6, 18, 200, 16);

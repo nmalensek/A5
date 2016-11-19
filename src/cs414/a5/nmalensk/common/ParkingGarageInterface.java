@@ -11,5 +11,6 @@ import java.util.List;
      GarageGateInterface initializeGarageGate(String gateName) throws RemoteException;
      List getGateList() throws RemoteException;
      void gateInitialized(GarageGateInterface gate) throws RemoteException;
+     void gateShutDown(GarageGateInterface gate) throws RemoteException;
 
 }

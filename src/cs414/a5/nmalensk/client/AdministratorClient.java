@@ -23,7 +23,7 @@ public class AdministratorClient {
         }
 
         try {
-            adminGUI = new AdministratorGUI(pGI.getTLog(), pGI.getGateList());
+            adminGUI = new AdministratorGUI(pGI);
             adminGUI.setVisible(true);
         } catch (RemoteException re) {
             re.printStackTrace();

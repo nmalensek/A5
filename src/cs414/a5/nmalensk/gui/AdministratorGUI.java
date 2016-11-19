@@ -1,5 +1,6 @@
 package cs414.a5.nmalensk.gui;
 
+import cs414.a5.nmalensk.common.ParkingGarageInterface;
 import cs414.a5.nmalensk.common.TransactionLogInterface;
 
 import java.awt.EventQueue;
@@ -31,7 +32,7 @@ public class AdministratorGUI extends JFrame {
 	private TransactionLogInterface log;
 	private List gateList;
 
-	public AdministratorGUI(TransactionLogInterface log, List gateList) {
+	public AdministratorGUI(ParkingGarageInterface pGI) throws RemoteException {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -97,6 +98,7 @@ public class AdministratorGUI extends JFrame {
 				try {
 					LocalDateTime start = parseDateTime(getDateTime(txtStartdate, txtStarttime));
 					LocalDateTime end = parseDateTime(getDateTime(txtEnddate, txtEndTime));
+					updateGateList(pGI);
 					createReportGUI(start, end);
 				} catch (DateTimeParseException dtpe) {
 					error.alertDialog("Invalid input, please check your formatting!",
@@ -108,8 +110,7 @@ public class AdministratorGUI extends JFrame {
 		});
 
 		error = new DialogBoxes();
-		this.log = log;
-		this.gateList = gateList;
+		log = pGI.getTLog();
 
 		txtStartdate.setText("2016-10-01");
 		txtEnddate.setText("2016-10-29");
@@ -135,6 +136,10 @@ public class AdministratorGUI extends JFrame {
 		ReportGenerationGUI reportGenerationGUI = new ReportGenerationGUI(log, gateList);
 		reportGenerationGUI.showReportGenerationGUI(this, start, end);
 		hideInitialPane();
+	}
+
+	private void updateGateList(ParkingGarageInterface pGI) throws RemoteException {
+		gateList = pGI.getGateList();
 	}
 
 	public void setLayer(JPanel panel) {mainPane.setLayer(panel, 1);}

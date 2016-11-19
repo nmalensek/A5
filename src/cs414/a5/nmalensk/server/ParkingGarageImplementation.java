@@ -47,4 +47,9 @@ public class ParkingGarageImplementation
         gateList.add(gate);
     }
 
+    public void gateShutDown(GarageGateInterface gate) throws RemoteException {
+        System.out.println("Gate " + gate.getName() + " offline");
+        gateList.remove(gate);
+    }
+
 }

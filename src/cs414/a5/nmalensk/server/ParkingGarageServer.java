@@ -13,6 +13,7 @@ public class ParkingGarageServer {
 
         try {
             LocateRegistry.createRegistry(2500);
+            System.setProperty("java.rmi.server.localhost", "120.0.0.1");
             ParkingGarageInterface pG = new ParkingGarageImplementation(spacesInGarage);
             Naming.rebind(url, pG);
             System.out.println("Parking garage server running...");
