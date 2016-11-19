@@ -44,6 +44,9 @@ public class TicketInputGUI {
                     handleValidTicket(mainMenu, gGI, tLI, handler, input);
                 } catch (RemoteException e1) {
                     e1.printStackTrace();
+                } catch (NumberFormatException nfe) {
+                    dialogs.alertDialog("Please enter a valid ticket ID (numbers only)!",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -76,8 +79,8 @@ public class TicketInputGUI {
 
 
     private void handleValidTicket(GateGUIInterface menu, GarageGateInterface gate, TransactionLogInterface log,
-                                   PaymentHandlerGUI handler, String input) throws RemoteException {
-        try {
+                                   PaymentHandlerGUI handler, String input) throws RemoteException,
+            NumberFormatException {
             int exitTicket = Integer.parseInt(input);
             if (gate.checkTicket(log, exitTicket)) {
                 dialogs.alertDialog("Ticket accepted!", JOptionPane.INFORMATION_MESSAGE);
@@ -88,11 +91,6 @@ public class TicketInputGUI {
                 dialogs.alertDialog("Invalid ticket ID, re-enter or select 'Lost ticket'.",
                         JOptionPane.ERROR_MESSAGE);
             }
-        } catch (NumberFormatException nfe) {
-            dialogs.alertDialog("Please enter a valid ticket ID (numbers only)!",
-                    JOptionPane.ERROR_MESSAGE);
-            showTicketInput(menu, gate, log, handler);
-        }
     }
 
     private void handleLostTicket(GateGUIInterface menu, GarageGateInterface gate, TransactionLogInterface log,
