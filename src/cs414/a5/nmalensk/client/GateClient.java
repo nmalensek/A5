@@ -17,13 +17,13 @@ public class GateClient {
         ParkingGarageInterface pGI = null;
         try {
             pGI = (ParkingGarageInterface)
-                    Naming.lookup("rmi://" + args[0] + ":" + args[1] + "/ParkingGarageService");
+                    Naming.lookup("rmi://" + args[1] + ":" + args[2] + "/ParkingGarageService");
         } catch (RemoteException | NotBoundException | MalformedURLException e) {
             e.printStackTrace();
             System.exit(-1);
         }
 
-        String gateName = args[2];
+        String gateName = args[0];
 
         try {
             GarageGateInterface gGI = pGI.initializeGarageGate(gateName);

@@ -29,10 +29,10 @@ implements GateReportGeneratorInterface {
             GarageGateInterface gGI = (GarageGateInterface) gateList.get(listPosition);
             for (Integer key : assignedTickets.keySet()) {
                 TicketInterface ticket = assignedTickets.get(key);
-                if (gGI.getName().equals(ticket.getEntryGate()) && enteredInRange(ticket, start)) {
+                if (gGI.getName().equals(ticket.getEntryGate()) && enteredInRange(ticket, start, finish)) {
                     numEntries += addGateEntries(gGI, ticket);
                 }
-                if (gGI.getName().equals(ticket.getExitGate()) && exitedInRange(ticket, finish)) {
+                if (gGI.getName().equals(ticket.getExitGate()) && exitedInRange(ticket, start, finish)) {
                     numExits += addGateExits(gGI, ticket);
                 }
             }
@@ -42,18 +42,18 @@ implements GateReportGeneratorInterface {
         return gateReport;
     }
 
-    private boolean enteredInRange(TicketInterface ticket, LocalDateTime start)
+    private boolean enteredInRange(TicketInterface ticket, LocalDateTime start, LocalDateTime finish)
             throws RemoteException {
-        if (ticket.getEntryTime().compareTo(start) >= 0) {
+        if (ticket.getEntryTime().compareTo(start) >= 0 && ticket.getEntryTime().compareTo(finish) <= 0) {
             return true;
         } else {
             return false;
         }
     }
 
-    private boolean exitedInRange(TicketInterface ticket, LocalDateTime finish)
+    private boolean exitedInRange(TicketInterface ticket, LocalDateTime start, LocalDateTime finish)
             throws RemoteException {
-        if (ticket.getExitTime().compareTo(finish) <= 0) {
+        if (ticket.getExitTime().compareTo(start) >= 0 && ticket.getExitTime().compareTo(finish) <= 0) {
             return true;
         } else {
             return false;

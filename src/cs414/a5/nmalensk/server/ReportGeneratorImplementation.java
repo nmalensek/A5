@@ -93,7 +93,7 @@ public class ReportGeneratorImplementation
                 }
             }
         }
-        ticketReport += String.format("%5s %10s %5s %n", normalTickets, "|", lostTickets);
+        ticketReport += String.format("%12s %10s %10s %n", normalTickets, "|", lostTickets);
         return ticketReport;
     }
 
