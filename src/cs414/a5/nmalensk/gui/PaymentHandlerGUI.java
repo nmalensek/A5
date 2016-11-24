@@ -1,10 +1,7 @@
 package cs414.a5.nmalensk.gui;
 
-
 import cs414.a5.nmalensk.common.GateGUIInterface;
-import cs414.a5.nmalensk.common.TicketInterface;
 import cs414.a5.nmalensk.common.TransactionLogInterface;
-import cs414.a5.nmalensk.gui.DialogBoxes;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -25,20 +22,11 @@ public class PaymentHandlerGUI {
         dialogs = new DialogBoxes();
     }
 
-    public void promptForTotal(TransactionLogInterface log, int ticketID,
-                               GateGUIInterface mainMenu) throws RemoteException {
-        total = log.getTicketPrice(ticketID);
-        this.ticketID = ticketID;
-
-        showPaymentGUI(mainMenu, total, log);
-    }
-
     public void showPaymentGUI(GateGUIInterface mainMenu, BigDecimal total,
                                TransactionLogInterface log) throws RemoteException {
         paymentPanel = new JPanel();
         paymentPanel.setBounds(6, 67, 426, 400);
         paymentPanel.setLayout(null);
-        paymentPanel.setVisible(false);
 
         mainMenu.setLayer(paymentPanel);
 
@@ -77,8 +65,24 @@ public class PaymentHandlerGUI {
         paymentPanel.setVisible(true);
     }
 
+    public void hidePaymentPanel() {
+        paymentPanel.setVisible(false);
+    }
+
+    public void updateTotal(BigDecimal newTotal) {
+        lblAmountDue.setText("Amount due: " + String.valueOf(newTotal));
+    }
+
+    public void promptForTotal(TransactionLogInterface log, int ticketID,
+                               GateGUIInterface mainMenu) throws RemoteException {
+        total = log.getTicketPrice(ticketID);
+        this.ticketID = ticketID;
+
+        showPaymentGUI(mainMenu, total, log);
+    }
+
     private BigDecimal handleCashPayment() {
-        BigDecimal paymentAmount = null;
+        BigDecimal paymentAmount = BigDecimal.ZERO;
         try {
             paymentAmount = new BigDecimal(dialogs.inputDialog("Please insert cash:", "Insert cash"));
         } catch (NumberFormatException e) {
@@ -104,11 +108,11 @@ public class PaymentHandlerGUI {
     private void cashPayment(TransactionLogInterface log) throws RemoteException {
         total = total.subtract(handleCashPayment());
         if (total.compareTo(BigDecimal.ZERO) > 0) {
-            lblAmountDue.setText("Amount due: " + String.valueOf(total));
+            updateTotal(total);
         } else {
             giveChange(total.negate());
             log.markTicketPaid(ticketID);
-            paymentPanel.setVisible(false);
+            hidePaymentPanel();
         }
     }
 
@@ -116,7 +120,7 @@ public class PaymentHandlerGUI {
         total = total.subtract(handleCreditPayment(total));
         dialogs.alertDialog("Payment accepted!", JOptionPane.INFORMATION_MESSAGE);
         log.markTicketPaid(ticketID);
-        paymentPanel.setVisible(false);
+        hidePaymentPanel();
     }
 
     private void giveChange(BigDecimal changeAmount) {

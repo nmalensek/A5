@@ -30,10 +30,10 @@ implements GateReportGeneratorInterface {
             for (Integer key : assignedTickets.keySet()) {
                 TicketInterface ticket = assignedTickets.get(key);
                 if (gGI.getName().equals(ticket.getEntryGate()) && enteredInRange(ticket, start, finish)) {
-                    numEntries += addGateEntries(gGI, ticket);
+                    numEntries += 1;
                 }
                 if (gGI.getName().equals(ticket.getExitGate()) && exitedInRange(ticket, start, finish)) {
-                    numExits += addGateExits(gGI, ticket);
+                    numExits += 1;
                 }
             }
             gateReport += String.format("%-6s %1s %13s %11s %7s %n", gGI.getName(),
@@ -58,14 +58,6 @@ implements GateReportGeneratorInterface {
         } else {
             return false;
         }
-    }
-
-    private int addGateEntries(GarageGateInterface gGI, TicketInterface ticket) {
-            return 1;
-    }
-
-    private int addGateExits(GarageGateInterface gGI, TicketInterface ticket) {
-            return 1;
     }
 
 }

@@ -15,7 +15,6 @@ public class TicketInputGUI {
     private JButton okButton;
     private JButton lostTicketButton;
     private JLabel lblEnterTicket;
-    private JTextField field;
     private DialogBoxes dialogs;
 
     public TicketInputGUI() {

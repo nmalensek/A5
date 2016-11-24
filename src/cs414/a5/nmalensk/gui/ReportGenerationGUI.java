@@ -38,9 +38,6 @@ public class ReportGenerationGUI {
         gateReports = new GateReportGeneratorImplementation(gateList);
     }
 
-    /**
-     * @wbp.parser.entryPoint
-     */
     public void showReportGenerationGUI(AdministratorGUI adminGUI, LocalDateTime start,
                                         LocalDateTime end) {
 

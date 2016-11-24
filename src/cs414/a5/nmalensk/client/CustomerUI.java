@@ -42,8 +42,5 @@ public class CustomerUI {
     private void checkTicketValidity(GateGUIInterface menu) throws RemoteException {
         TicketInputGUI tIG = new TicketInputGUI();
         tIG.showTicketInput(menu, gGI, tLI, handler);
-
     }
-
-
 }

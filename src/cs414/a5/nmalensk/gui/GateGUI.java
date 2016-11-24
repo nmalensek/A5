@@ -35,9 +35,6 @@ public class GateGUI extends UnicastRemoteObject implements GateGUIInterface {
 		this.pGI = pGI;
 	}
 
-	/**
-	 * @wbp.parser.entryPoint
-	 */
 	public void createFrame() throws RemoteException {
 		customerGUI = new JFrame();
 		customerGUI.setTitle("Welcome to the parking garage! You are at gate " + gGI.getName());
