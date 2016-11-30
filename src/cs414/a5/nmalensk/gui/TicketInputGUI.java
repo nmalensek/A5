@@ -85,7 +85,7 @@ public class TicketInputGUI {
                 dialogs.alertDialog("Ticket accepted!", JOptionPane.INFORMATION_MESSAGE);
                 ticketPanel.setVisible(false);
                 menu.removePanel(ticketPanel);
-                handler.promptForTotal(log, exitTicket, menu);
+                handler.retrieveTotal(log, exitTicket, menu);
             } else {
                 dialogs.alertDialog("Invalid ticket ID, re-enter or select 'Lost ticket'.",
                         JOptionPane.ERROR_MESSAGE);
@@ -97,6 +97,6 @@ public class TicketInputGUI {
         int lostTicket = gate.createAndUpdateLostTicket(log);
         ticketPanel.setVisible(false);
         menu.removePanel(ticketPanel);
-        handler.promptForTotal(log, lostTicket, menu);
+        handler.retrieveTotal(log, lostTicket, menu);
     }
 }
